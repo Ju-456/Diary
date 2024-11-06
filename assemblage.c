@@ -7,10 +7,6 @@
 #include <dirent.h> // read and browse the folders
 #include <time.h>
 
-/*
-Error opening file for writing. when cretate page ? 
-
-*/
 #define SizeMaxPage 256
 
 typedef struct {
