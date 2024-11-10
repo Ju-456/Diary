@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "user.h"
 #include "page.h"
 #include "MenuAndDeco.h"
@@ -11,7 +10,7 @@ int main() {
     int NbPage = 0;
     int PageToDelete = 0;
     char FolderName[1024];
-    char filename[80];
+    char filename[256] = "Page.txt";
     FILE *file = fopen(filename, "w");
 
     WelcomeJournal();

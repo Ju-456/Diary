@@ -1,11 +1,4 @@
-#include "page.h"
-#include <stdio.h>
-#include <string.h>
-
 #include "MenuAndDeco.h"
-#include <stdlib.h>
-#include "user.h"
-#include "page.h"
 
 void menu(User *TempUser, Page **TempPage, int *NbPage, char *filename, FILE *file, int PageToDelete) {
     char answer[4];
@@ -70,7 +63,7 @@ void WelcomeJournal(){
 
 }
 
-void EnterJournal(){
+void PersonalAccess(){
 
     printf("***********************\n");
     printf("***********_***********\n");

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #include "MenuAndDeco.h"
 #include "user.h"
@@ -12,14 +13,14 @@ void DataUser(User *TempUser, char *FolderName, Page **TempPage,int *NbPage,char
     printf("Enter an user id: ");
     scanf("%49s", TempUser->UIdentifiant);
 
-    printf("Enter the password ");
+    printf("Enter the password: ");
     scanf("%49s", TempUser->UPassword);
 
     printf("\n");
     
     snprintf(FolderName, 1024, "/home/ju456/%s_%s", TempUser->UIdentifiant, TempUser->UPassword); // changer mettre le mdp dans un dossier nommer mdp dans fichier
     if (access(FolderName, F_OK) == 0) { 
-        printf("You already have an account!\nPlease log in here:");
+        printf("You already have an account!\n");
         printf("\n");
         LogInUser(TempUser, FolderName, TempPage, NbPage,filename, file, PageToDelete);// si compte identification
     } else {
@@ -38,16 +39,16 @@ void DataUser(User *TempUser, char *FolderName, Page **TempPage,int *NbPage,char
 
 void LogInUser(User *TempUser, char *FolderName, Page **TempPage,int *NbPage, char *filename, FILE *file, int PageToDelete){
 
-    printf("Enter your id: ");
+/*printf("Enter your id: ");
     scanf("%49s", TempUser->UIdentifiant);
 
     printf("Enter your password: ");
-    scanf("%49s", TempUser->UPassword);
+    scanf("%49s", TempUser->UPassword);*/
 
     snprintf(FolderName, 1024, "/home/ju456/%s_%s", TempUser->UIdentifiant, TempUser->UPassword);
     if (access(FolderName, F_OK) == 0) {
         BoucleJournal(TempUser, TempPage, NbPage, filename, file, PageToDelete);
-        EnterJournal();
+        PersonalAccess();
     } else {
         int TooLate = 0;
         TooLate++;
@@ -78,7 +79,7 @@ void CreateAnUser(User *TempUser, char *FolderName, Page **TempPage,int *NbPage,
     printf("\n");
 
     if (strcmp(TempUser->UPassword, UPassword2) == 0) {
-        EnterJournal();
+        PersonalAccess();
         FolderCreation(FolderName, TempUser, TempPage, NbPage, filename, file, PageToDelete);
     } else {
         printf("Passwords don't match.\nPlease try answer.\n");
@@ -98,7 +99,7 @@ void FolderCreation(char *FolderName, User *TempUser, Page **TempPage, int *NbPa
         }
     #else
         if (mkdir(FolderName, 0777) == 0) { //766 pour empecher balade fichier 
-            printf("Hello");
+            printf("Hello\n");
             //DateAndHour(); à l1 puis user écrit à l2
             BoucleJournal(TempUser, TempPage, NbPage, filename, file, PageToDelete);
         } else {
@@ -127,7 +128,8 @@ void FolderExist(char *FolderName, User *TempUser, Page **TempPage,int *NbPage, 
 }
 
 void SaveToFile(char *filename, FILE *file, int *NbPage, Page **TempPage,User *TempUser) {
-    snprintf(filename, sizeof(filename), "/home/ju456/%s_%s/Page%d.txt", TempUser->UIdentifiant, TempUser->UPassword, *NbPage);
+    //snprintf(filename, sizeof(filename), "/home/ju456/%s_%s/Page%d.txt", TempUser->UIdentifiant, TempUser->UPassword, *NbPage);
+    snprintf(filename, 1024, "/home/ju456/%s_%s/Page%d.txt", TempUser->UIdentifiant, TempUser->UPassword, *NbPage);
     if (file == NULL) {
         printf("Error opening file for writing.\n");
         return;

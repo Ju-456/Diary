@@ -1,10 +1,8 @@
 #ifndef PAGE_H
 #define PAGE_H
 
-#include <stdio.h>
-struct User;
-
 #define SizeMaxPage 256
+#include <stdio.h>
 
 typedef struct {
     // point de vie 3
@@ -21,7 +19,7 @@ void ConsultPagepB(User *TempUser, int *NbPage, Page **TempPage,char *filename, 
 void WriteInPage(Page *TempPage, int page_index);
 
 void EnterPassword(Page *TempPage, int page_index, int *NbPage, char *filename, FILE *file, int PageToDelete, User *TempUser);
-void BlockedAccesPage(Page **TempPage, int *NbPage, int PageToDelete);
+//void BlockedAccessPage(Page **TempPage, int PageToDelete); à corriger
 
 void DateAndHour(FILE *file, int *NbPage);
 
