@@ -1,10 +1,8 @@
 #ifndef PAGE_H
 #define PAGE_H
 
-#include <stdio.h>
-struct User;
-
 #define SizeMaxPage 256
+#include <stdio.h>
 
 typedef struct {
     // point de vie 3
