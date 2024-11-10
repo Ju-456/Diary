@@ -1,12 +1,12 @@
 #ifndef USER_H
 #define USER_H
 
-#include "page.h"
-
 typedef struct {
-    char UIdentifiant[15];
-    char UPassword[15];
+    char UIdentifiant[20];
+    char UPassword[20];
 } User;
+
+#include "page.h"
 
 // User gestion part
 void DataUser(User *TempUser, char *FolderName, Page **TempPage,int *NbPage,char *filename, FILE *file, int PageToDelete);
