@@ -45,17 +45,16 @@ void DeleteProcess(Page **TempPage, int *NbPage, User *TempUser, char *filename,
     ConsultPagepB(TempUser, NbPage, TempPage, filename, file, PageToDelete);
 }
 
-// a tester + tard
+
 void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, char *filename, FILE *file, User *TempUser) {
     int page_requested;
-    // ne rentre pas 
-    if (strcmp((*TempPage)[PageToDelete].password, "MdpAdminOnly2104") == 0) {
+    /* if (strcmp((*TempPage)[PageToDelete].password, "MdpAdminOnly2104") == 0) {
         printf("You can't access this page, this page was blocked\n");
         printf("Returning to the menu.\n");
         menu(TempUser, TempPage, &NbPage, filename, file, PageToDelete);
         return;
-    }
-
+    }*/
+   
     printf("Which page do you want to consult? (number) : ");
     scanf("%d", &page_requested);
 
@@ -137,7 +136,7 @@ void EnterPassword(Page *TempPage, int page_index, int *NbPage, char *filename, 
             } else {
                 printf("You can't access this page, this page was blocked\n");
                 printf("\n");
-                BlockedAccesPage(&TempPage, NbPage, page_index);
+                //BlockedAccessPage(&TempPage, page_index);
                 printf("Returning to the menu.\n");
                 menu(TempUser, &TempPage, NbPage, filename, file, PageToDelete);
             }
@@ -145,26 +144,25 @@ void EnterPassword(Page *TempPage, int page_index, int *NbPage, char *filename, 
     }
 }
 
-// A optimiser ou même changer le raisonnement bouléen
-void BlockedAccesPage(Page **TempPage, int *NbPage, int PageToDelete) {
+/* A optimiser ou même changer le raisonnement bouléen
+void BlockedAccessPage (Page **TempPage, int PageToDelete) {
+    
     char CopyBlockedPass[11];
-    char CopyBlockedDate[11];
     char CopyBlockedNote[SizeMaxPage];
 
     // Copy intern of page's information
     // strncpy(source, destination, n);
     strncpy(CopyBlockedPass, (*TempPage)[PageToDelete].password, sizeof((*TempPage)[PageToDelete].password));
-    //strncpy(CopyBlockedDate, (*TempPage)[PageToDelete].date, sizeof((*TempPage)[PageToDelete].date)); **time.h**
     strncpy(CopyBlockedNote, (*TempPage)[PageToDelete].note, sizeof((*TempPage)[PageToDelete].note));
 
     // Page reset 
     // memset(source, remplacement, n); 
     strncpy((*TempPage)[PageToDelete].password, "MdpAdminOnly2104", sizeof((*TempPage)[PageToDelete].password)); // supprime
-    //memset((*TempPage)[PageToDelete].date, 0, sizeof((*TempPage)[PageToDelete].date)); **time.h**
     memset((*TempPage)[PageToDelete].note, 0, sizeof((*TempPage)[PageToDelete].note)); 
 
     printf("%s",CopyBlockedPass); // ça n'a pas marché 
-}
+    
+}*/
 
 void DateAndHour(FILE *file, int *NbPage){
     time_t timestamp = time(NULL);
