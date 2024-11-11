@@ -56,70 +56,22 @@ void WelcomeJournal();
 void PersonalAcces();
 void ByeJournal();
 
+
 void WelcomeJournal(){
-    
-    printf("***********************\n");
-    printf("***********_***********\n");
-    printf("*********_____*********\n");
-    printf("*******_________*******\n");
-    printf("*****_____________*****\n");
-    printf("***_____Welcome_____***\n");
-    printf("***_______to________***\n");
-    printf("***_______the_______***\n");
-    printf("***_____journal_____***\n");
-    printf("*****_____:D______*****\n");
-    printf("*******_________*******\n");
-    printf("*********_____*********\n");
-    printf("**********___**********\n");
-    printf("***********_***********\n");
-    printf("***********************\n");
-
+    printf("***********************\n***********_***********\n*********_____*********\n*******_________*******\n*****_____________*****\n***_____Welcome_____***\n***_______to________***\n***_______the_______***\n***_____journal_____***\n*****_____:D______*****\n*******_________*******\n*********_____*********\n**********___**********\n***********_***********\n***********************\n");
     printf("\n");
-
 }
 
-void EnterJournal(){
+void PersonalAccess(){
 
-    printf("***********************\n");
-    printf("***********_***********\n");
-    printf("*********_____*********\n");
-    printf("*******_________*******\n");
-    printf("*****_____________*****\n");
-    printf("***_____Welcome_____***\n");
-    printf("***_______to________***\n");
-    printf("***______your_______***\n");
-    printf("***____personal_____***\n");
-    printf("****_____space_____****\n");
-    printf("*****_____^^_____******\n");
-    printf("********_______********\n");
-    printf("**********___**********\n");
-    printf("***********_***********\n");
-    printf("***********************\n");
-
+    printf("***********************\n***********_***********\n*********_____*********\n*******_________*******\n*****_____________*****\n***_____Welcome_____***\n***_______to________***\n***______your_______***\n***____personal_____***\n****_____space_____****\n*****_____^^_____******\n********_______********\n**********___**********\n***********_***********\n***********************\n");
     printf("\n");
 
 }
 
 void ByeJournal() {
-
-  printf("***********************\n");
-  printf("***********_***********\n");
-  printf("*********_____*********\n");
-  printf("*******_________*******\n");
-  printf("*****_____________*****\n");
-  printf("***_______See_______***\n");
-  printf("***_______you_______***\n");
-  printf("***______later______***\n");
-  printf("***_________________***\n");
-  printf("*****_____Bye______****\n");
-  printf("******____<3_____******\n");
-  printf("*********_____*********\n");
-  printf("**********___**********\n");
-  printf("***********_***********\n");
-  printf("***********************\n");
-
-  printf("\n");
-
+    printf("***********************\n***********_***********\n*********_____*********\n*******_________*******\n*****_____________*****\n***_______See_______***\n***_______you_______***\n***______later______***\n***_________________***\n*****_____Bye______****\n******____<3_____******\n*********_____*********\n**********___**********\n***********_***********\n***********************\n");
+    printf("\n");
 }
 
 void DataUser(User *TempUser, char *FolderName, Page **TempPage,int *NbPage,char *filename, FILE *file, int PageToDelete) {
@@ -263,7 +215,8 @@ void CreatePage(User *TempUser, Page **TempPage, int *NbPage,char *filename, FIL
 }
 
 void SaveToFile(char *filename, FILE *file, int *NbPage, Page **TempPage,User *TempUser) {
-    snprintf(filename, sizeof(filename), "/home/ju456/%s_%s/Page%d.txt", TempUser->UIdentifiant, TempUser->UPassword, *NbPage);
+    snprintf(filename, 1024, "/home/ju456/%s_%s/Page%d.txt", TempUser->UIdentifiant, TempUser->UPassword, *NbPage);
+    //snprintf(filename, sizeof(filename), "/home/ju456/%s_%s/Page%d.txt", TempUser->UIdentifiant, TempUser->UPassword, *NbPage);
     if (file == NULL) {
         printf("Error opening file for writing.\n");
         return;
