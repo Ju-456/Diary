@@ -9,7 +9,7 @@ main.c
  MenuAndDeco.h
 
 Non-modular version :
- FullVersion.c
+ FullVersionWorks.c
 
 Old Version that works :
  OldVersion.c
