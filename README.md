@@ -11,5 +11,3 @@ main.c
 Non-modular version :
  FullVersionWorks.c
 
-Old Version that works :
- OldVersion.c
