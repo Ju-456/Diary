@@ -25,13 +25,13 @@ void BoucleJournal(User *TempUser, Page **TempPage, int *NbPage, int PageToDelet
 void menu(User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, char *CDirectory);
 
 // User gestion part
-void CurrentDirectory(char *CDirectory);
-void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete);
+void CurrentDirectory(char *CDirector, FILE *file);
+void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file);
 
-void SignInUser(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete);
+void SignInUser(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file);
 void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, int *NbPage, int PageToDelete);
 
-void FolderCreation(char *CDirectory, User *TempUser, Page **TempPage, int *NbPage, int PageToDelete);
+void FolderCreation(char *CDirectory, User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, FILE *file);
 
 // Page gestion part
 void CreatePage(User *TempUser, Page **TempPage, int *NbPage,char *CDirectory);
@@ -65,13 +65,12 @@ void ByeJournal() {
     exit(0);
 }
 
-void CurrentDirectory(char *CDirectory){
+void CurrentDirectory(char *CDirectory, FILE *file){
     if (getcwd(CDirectory, PATH_MAX) != NULL) {
        //printf("Current directory: %s\n", CDirectory);
    } else {
        perror("Problem of autorization, please fix it");
    }
-    FILE *file = fopen("password.txt", "a");
     if (file == NULL) {
         printf("Failed to create password repository.\n");
     } else {
@@ -79,14 +78,14 @@ void CurrentDirectory(char *CDirectory){
     }
 }
 
-void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete){
+void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file){
     printf("Do you have an account? (yes/no): ");
     char answer[4];
     scanf("%3s", answer);
 
     if (strcmp(answer, "no") == 0) {
         printf("Go to create an account!\n");
-        SignInUser(TempUser, CDirectory, TempPage, NbPage, PageToDelete);
+        SignInUser(TempUser, CDirectory, TempPage, NbPage, PageToDelete, file);
     } else {
         FILE *file = fopen("password.txt", "r");
         if (file != NULL) {
@@ -94,7 +93,7 @@ void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *
             fclose(file);
         } else {
             printf("Account file not found. Please create a new account.\n");
-            SignInUser(TempUser, CDirectory, TempPage, NbPage, PageToDelete);
+            SignInUser(TempUser, CDirectory, TempPage, NbPage, PageToDelete, file);
         }
     }
 }
@@ -114,7 +113,7 @@ void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, in
 
         if (strcmp(answer, "yes") == 0) {
             printf("Creating account...\n");
-            SignInUser(TempUser, CDirectory, TempPage, NbPage, PageToDelete);
+            SignInUser(TempUser, CDirectory, TempPage, NbPage, PageToDelete, file);
         } else {
             ByeJournal();
         }
@@ -146,7 +145,7 @@ void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, in
     }
 }
 
-void SignInUser(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete){
+void SignInUser(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file){
     char UPass2[15];
 
     PersonalAccess();
@@ -161,10 +160,10 @@ void SignInUser(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, 
     printf("\n");
 
     if (strcmp(TempUser->UPass, UPass2) == 0) {
-        FolderCreation(CDirectory, TempUser, TempPage, NbPage, PageToDelete);
+        FolderCreation(CDirectory, TempUser, TempPage, NbPage, PageToDelete, file);
     } else {
         printf("Passwords don't match.\nPlease try again.\n");
-        SignInUser(TempUser, CDirectory, TempPage, NbPage, PageToDelete);
+        SignInUser(TempUser, CDirectory, TempPage, NbPage, PageToDelete, file);
     }
 }
 
@@ -176,77 +175,32 @@ void SignInUser(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, 
     #define CREATE_DIR(path) mkdir(path, 0777)
 #endif
 
-void FolderCreation(char *CDirectory, User *TempUser, Page **TempPage, int *NbPage, int PageToDelete) {
+void FolderCreation(char *CDirectory, User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, FILE *file ) {
     char TempUserFoldPath[PATH_MAX];
     snprintf(TempUserFoldPath, PATH_MAX, "%s/%s", CDirectory, TempUser->UId);
 
     if (CREATE_DIR(TempUserFoldPath) == 0) {
         //printf("User folder successfully created: %s\n", TempUserFoldPath);
 
-        char passwordFilePath[PATH_MAX];
-        snprintf(passwordFilePath, PATH_MAX, "%s/password.txt", CDirectory);
+        char PassFilePath[PATH_MAX];
+        snprintf(PassFilePath, PATH_MAX, "%s/password.txt", CDirectory);
 
-        FILE *file = fopen(passwordFilePath, "a");
-        if (file == NULL) {
+        FILE *Afile = fopen(PassFilePath, "a");
+        if (Afile == NULL) {
             perror("Error opening password.txt");
             return;
         }
 
-        fprintf(file, "%s %s\n", TempUser->UId, TempUser->UPass);
-        fclose(file);
+        fprintf(Afile, "%s %s\n", TempUser->UId, TempUser->UPass);
+        fclose(Afile);
         printf("User account successfully created.\n");
 
         menu(TempUser, TempPage, NbPage, PageToDelete, CDirectory);
     } else {
-        perror("Error creating user folder");
+        perror("Error creating account");
+        LogInUser(file, CDirectory, TempUser, TempPage, NbPage, PageToDelete);
     }
 }
-/*
-void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory) {
-    *TempPage = realloc(*TempPage, (*NbPage + 1) * sizeof(Page));
-    if (*TempPage == NULL) {
-        printf("Error allocating memory.\n");
-        exit(1);
-    }
-
-    printf("Enter the password (max 10 characters) : ");
-    scanf("%10s", (*TempPage)[*NbPage].password);
-
-    printf("Write your page (max 256 characters): ");
-    getchar();
-    fgets((*TempPage)[*NbPage].note, SizeMaxPage, stdin);
-
-    (*NbPage)++;
-    SaveToFile(TempUser, NbPage, &TempPage, CDirectory);
-}
-
-void SaveToFile(User *TempUser, int *NbPage, Page **TempPage, char *CDirectory) {
-    char userFolderPath[PATH_MAX];
-    snprintf(userFolderPath, PATH_MAX, "%s/%s", CDirectory, TempUser->UId);
-
-    // if change to the user directory
-    if (chdir(userFolderPath) != 0) {
-        printf("Error changing to user directory.\n");
-        return;
-    }
-
-    for (int i = 0; i < *NbPage; i++) {
-        char PageFilePath[PATH_MAX];
-        snprintf(PageFilePath, PATH_MAX, "%s/%s/Page%d.txt", CDirectory, TempUser->UId, i + 1);
-
-        FILE *file = fopen(PageFilePath, "w");
-        if (file == NULL) {
-            printf("Error opening file for writing page %d.\n", i + 1);
-            continue;
-        }
-
-        fprintf(file, "Page %d - \nContent:\n%s\n\n", i + 1, (*TempPage)[i].note);
-        fclose(file);
-    }
-
-    printf("All pages saved successfully in individual files.\n");
-}
-*/
 
 void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory) {
     *TempPage = realloc(*TempPage, (*NbPage + 1) * sizeof(Page));
@@ -258,7 +212,7 @@ void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory) 
     printf("Enter the password (max 10 characters) : ");
     scanf("%10s", (*TempPage)[*NbPage].password);
 
-    printf("Write your page (max 256 characters): ");
+    printf("Write your page (max 256 characters):\n ");
     getchar();
     fgets((*TempPage)[*NbPage].note, SizeMaxPage, stdin);
 
@@ -279,14 +233,21 @@ void SaveToFile(User *TempUser, int *NbPage, Page *TempPage, char *CDirectory) {
         char PageFilePath[PATH_MAX];
         snprintf(PageFilePath, PATH_MAX, "%s/%s/Page%d.txt", CDirectory, TempUser->UId, i + 1);
 
-        FILE *file = fopen(PageFilePath, "w");
-        if (file == NULL) {
+        FILE *Wfile = fopen(PageFilePath, "w");
+        if (Wfile == NULL) {
             printf("Error opening file for writing page %d.\n", i + 1);
             continue;
         }
 
-        fprintf(file, "Page %d - \nContent:\n%s\n\n", i + 1, TempPage[i].note);
-        fclose(file);
+        time_t timestamp = time(NULL);
+        struct tm *FrenchHour = localtime(&timestamp);
+
+        fprintf(Wfile, "Page%d\nDate: %02d/%02d/%04d\nAt: %02dh%02d:%02d\n\n", 
+                i + 1, FrenchHour->tm_mday, FrenchHour->tm_mon + 1,
+                1900 + FrenchHour->tm_year, FrenchHour->tm_hour, FrenchHour->tm_min, FrenchHour->tm_sec);
+
+        fprintf(Wfile, "Content:\n%s\n\n", TempPage[i].note);
+        fclose(Wfile);
     }
 
     printf("All pages saved successfully in individual files.\n");
@@ -359,22 +320,26 @@ void BlockedAccesPage(Page **TempPage, int *NbPage, int PageToDelete) {
 void EnterPassword(Page *TempPage, int page_index, int *NbPage, User *TempUser, char *CDirectory) {
     char password[11];
     int TooLate = 0;
+    
     printf("Enter the password for this page (you have 3 attempts):\n ");
-    while (TooLate > 3 ) {
-        printf("Wrong password. You have %d attempt(s) left.\n", 3 - TooLate);
-        scanf("%10s", password);
+    
+    while (TooLate < 3) {
+        printf("Attempt %d: ", TooLate + 1);
+        scanf("%10s", password);  
 
-        if (strcmp(TempPage[page_index].password, password) == 0) {
+        if (strcmp(TempPage[page_index].password, password) == 0) { 
             printf("*Authorized access.*\n");
             printf("Note: %s\n", TempPage[page_index].note);
             return;
         } else {
             TooLate++;
             if (TooLate < 3) {
+                printf("Wrong password. You have %d attempt(s) left.\n", 3 - TooLate);  
+            } else {
                 printf("Access to this page is blocked.\n");
-                BlockedAccesPage(&TempPage, NbPage, page_index);
+                BlockedAccesPage(&TempPage, NbPage, page_index); 
                 printf("Returning to the menu.\n");
-                menu(TempUser, &TempPage, NbPage, page_index, CDirectory);
+                menu(TempUser, &TempPage, NbPage, page_index, CDirectory); 
             }
         }
     }
@@ -407,6 +372,15 @@ void WriteInPage(Page *TempPage, int page_index) {
     printf("Enter a new note for this page: ");
     getchar();  
     fgets(TempPage[page_index].note, SizeMaxPage, stdin);
+
+    char date_time[64];
+    snprintf(date_time, sizeof(date_time), "Page%d\nDate: %02d/%02d/%04d\nAt: %02dh%02d:%02d\n\n",
+             page_index + 1, FrenchHour->tm_mday, FrenchHour->tm_mon + 1,
+             1900 + FrenchHour->tm_year, FrenchHour->tm_hour, FrenchHour->tm_min, FrenchHour->tm_sec);
+    
+    char UpdatedNote[SizeMaxPage + 64];
+    snprintf(UpdatedNote, sizeof(UpdatedNote), "%s%s", date_time, TempPage[page_index].note);
+    strncpy(TempPage[page_index].note, UpdatedNote, SizeMaxPage);
     
     printf("The note was changed successfully.\n");
 }
@@ -456,9 +430,10 @@ int main() {
     int NbPage = 0;
     int PageToDelete = 0;
     char CDirectory[PATH_MAX];
+    FILE *file = fopen(CDirectory, "w"); 
 
-    CurrentDirectory(CDirectory); 
-    CodeImplementation(&TempUser, CDirectory, &TempPage, &NbPage, PageToDelete);
+    CurrentDirectory(CDirectory, file); 
+    CodeImplementation(&TempUser, CDirectory, &TempPage, &NbPage, PageToDelete, file);
 
     WelcomeJournal();
     while(1){
