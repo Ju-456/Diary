@@ -25,22 +25,21 @@ void BoucleJournal(User *TempUser, Page **TempPage, int *NbPage, int PageToDelet
 void menu(User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, char *CDirectory);
 
 // User gestion part
-void CurrentDirectory(char *CDirector, FILE *file);
-void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file);
-
 void SignInUser(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file);
 void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, int *NbPage, int PageToDelete);
-
+//invisible part
+void CurrentDirectory(char *CDirector, FILE *file);
+void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file);
 void FolderCreation(char *CDirectory, User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, FILE *file);
+
 
 // Page gestion part
 void CreatePage(User *TempUser, Page **TempPage, int *NbPage,char *CDirectory);
-void DeleteProcess(Page **TempPage, int *NbPage, User *TempUser, char *CDirectory);
+void DeleteProcess(Page **TempPage, int *NbPage, User *TempUser, char *CDirectory); // là que page, rajouter user ? "si on vient de tel fonction"
 void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, char *CDirectory);
-void SaveToFile(User *TempUser, int *NbPage, Page *TempPage, char *CDirectory);
-void BlockedAccesPage(Page **TempPage, int *NbPage, int PageToDelete);
-
-// Auxiliary functions
+//invisible part
+void SaveToFile(User *TempUser, int *NbPage, Page *TempPage, char *CDirectory); // là c'est regroupé, peut être séparé
+void BlockedAccesPage(Page **TempPage, int *NbPage, int PageToDelete); // à modifier séparer ou regrouper ?
 void ConsultPagepB(User *TempUser, int *NbPage, Page **TempPage, int PageToDelete,char *CDirectory);
 void EnterPassword(Page *TempPage, int page_index, int *NbPage, User *TempUser, char *CDirectory);
 void WriteInPage(Page *TempPage, int page_index);
@@ -69,7 +68,7 @@ void CurrentDirectory(char *CDirectory, FILE *file){
     if (getcwd(CDirectory, PATH_MAX) != NULL) {
        //printf("Current directory: %s\n", CDirectory);
    } else {
-       perror("Problem of autorization, please fix it");
+       perror("Problem of autorization, please fix it in settings");
    }
     if (file == NULL) {
         printf("Failed to create password repository.\n");
@@ -79,15 +78,16 @@ void CurrentDirectory(char *CDirectory, FILE *file){
 }
 
 void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file){
-    printf("Do you have an account? (yes/no): ");
+    printf("Do you already use compile this programm ? (yes/no): ");
     char answer[4];
     scanf("%3s", answer);
 
     if (strcmp(answer, "no") == 0) {
+        FILE *file = fopen("password.txt", "a"); // create if doesn't exist
         printf("Go to create an account!\n");
         SignInUser(TempUser, CDirectory, TempPage, NbPage, PageToDelete, file);
     } else {
-        FILE *file = fopen("password.txt", "r");
+        FILE *file = fopen("password.txt", "r"); // on pourrait mettre "a" par précaution mais ça ecraserait le précédent, s'il a déjà des données..
         if (file != NULL) {
             LogInUser(file, CDirectory, TempUser, TempPage, NbPage, PageToDelete);
             fclose(file);
