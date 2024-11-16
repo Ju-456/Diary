@@ -21,13 +21,14 @@ Here are the different components available to you:
 ### 🌿 Side Branches  
 These are additional branches I developed for specific features, which you can explore or utilize if needed.  
 
-### 📦 Modular Legacy Version  
+### 📦 Modular Version  
 An older modular version of the project (a new one is planned for later).  
 
-### ✅ Functional Version  
+### Non-Modular Version 
+**✅ Functional Version**  
 **FullVersionWorks.c**  —> a fully operational version of the journal (but with missing features).  
 
-### ⚠️ Work-in-Progress Version  
+**⚠️ Work-in-Progress Version**  
 **FullVersionDeleteInProcess.c**  —> a version currently under development, with some pointer issues to resolve.  
 
 --- 
