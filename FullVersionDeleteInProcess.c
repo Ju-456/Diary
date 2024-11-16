@@ -43,7 +43,11 @@ void FolderCreation(char *CDirectory, User *TempUser, Page **TempPage, int *NbPa
 
 // Page gestion part
 void CreatePage(User *TempUser, Page **TempPage, int *NbPage,char *CDirectory);
+<<<<<<< HEAD
 void DeleteProcess(Page **TempPage, int *NbPage, User *TempUser,char *CDirectory, char *SourcePath, char *DestinationPath);
+=======
+void DeletePageProcess(Page **TempPage, int *NbPage, User *TempUser,char *CDirectory, char *SourcePath, char *DestinationPath);
+>>>>>>> ad4dac80f052243cf93916be91bbbe03abf83da7
 void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath);
 //invisible part
 void SaveToFile(User *TempUser, int *NbPage, Page *TempPage, char *CDirectory); // là c'est regroupé, peut être séparé
@@ -98,7 +102,15 @@ void PersonalAccess(){
     printf("\n");
 }
 
+<<<<<<< HEAD
+<<<<<<<< HEAD:FullVersionDeleteInProcess.c
 void ByeJournal(User *TempUser) {
+========
+void ByeJournal() {
+>>>>>>>> ad4dac80f052243cf93916be91bbbe03abf83da7:FullVersionWorks.c
+=======
+void ByeJournal(User *TempUser) {
+>>>>>>> ad4dac80f052243cf93916be91bbbe03abf83da7
     printf(
     "***********************\n"
     "***********_***********\n"
@@ -108,14 +120,30 @@ void ByeJournal(User *TempUser) {
     "***_______See_______***\n"
     "***_______you_______***\n"
     "***______later______***\n"
+<<<<<<< HEAD
+<<<<<<<< HEAD:FullVersionDeleteInProcess.c
     "***___ '%s' ___***\n"
+========
+    "***_________________***\n"
+>>>>>>>> ad4dac80f052243cf93916be91bbbe03abf83da7:FullVersionWorks.c
+=======
+    "***___ '%s' ___***\n"
+>>>>>>> ad4dac80f052243cf93916be91bbbe03abf83da7
     "*****_____Bye______*****\n"
     "******____<3______******\n"
     "*******_________*******\n"
     "*********_____*********\n"
     "**********___**********\n"
     "***********_***********\n"
+<<<<<<< HEAD
+<<<<<<<< HEAD:FullVersionDeleteInProcess.c
     "***********************\n", TempUser->UId);
+========
+    "***********************\n");
+>>>>>>>> ad4dac80f052243cf93916be91bbbe03abf83da7:FullVersionWorks.c
+=======
+    "***********************\n", TempUser->UId);
+>>>>>>> ad4dac80f052243cf93916be91bbbe03abf83da7
     exit(0);
 }
 
@@ -132,12 +160,26 @@ void CurrentDirectory(char *CDirectory, FILE *file){
     }
 }
 
+<<<<<<< HEAD
+<<<<<<<< HEAD:FullVersionDeleteInProcess.c
+void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath){
+    printf("Do you already compile this programm on your PC ? (yes/no): ");
+========
+void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file){
+    printf("Do you already compile this programm ? (yes/no): ");
+>>>>>>>> ad4dac80f052243cf93916be91bbbe03abf83da7:FullVersionWorks.c
+    char answer[4];
+    scanf("%3s", answer);
+
+    if (strcmp(answer, "no") == 0) {
+=======
 void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath){
     printf("Do you already compile this programm on your PC ? (yes/no): ");
     char answer[4];
     scanf("%3s", answer);
 
-    if (strcmp(answer, "no") == 0) {
+    if (strcmp(answer, "no") == 0 || strcmp(answer, "NO") == 0) {
+>>>>>>> ad4dac80f052243cf93916be91bbbe03abf83da7
         FILE *file = fopen("password.txt", "a"); // create if doesn't exist
         printf("Go to create an account!\n");
         SignInUser(TempUser, CDirectory, TempPage, NbPage, PageToDelete, file, SourcePath, DestinationPath);
@@ -167,7 +209,11 @@ void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, in
         printf("This ID doesn't exist.\nDo you want to create an account? (yes/no): ");
         scanf("%3s", answer); 
 
+<<<<<<< HEAD
         if (strcmp(answer, "yes") == 0) {
+=======
+        if (strcmp(answer, "yes") == 0 || strcmp(answer, "YES") == 0) {
+>>>>>>> ad4dac80f052243cf93916be91bbbe03abf83da7
             printf("Creating account...\n");
             SignInUser(TempUser, CDirectory, TempPage, NbPage, PageToDelete, file, SourcePath, DestinationPath);
         } else {
@@ -309,7 +355,11 @@ void SaveToFile(User *TempUser, int *NbPage, Page *TempPage, char *CDirectory) {
     printf("All pages saved successfully in individual files.\n");
 }
 
+<<<<<<< HEAD
 void DeleteProcess(Page **TempPage, int *NbPage, User *TempUser,char *CDirectory, char *SourcePath, char *DestinationPath){
+=======
+void DeletePageProcess(Page **TempPage, int *NbPage, User *TempUser,char *CDirectory, char *SourcePath, char *DestinationPath){
+>>>>>>> ad4dac80f052243cf93916be91bbbe03abf83da7
     int PageToDelete;
     char answer[4];
     char TempUserFoldPath[PATH_MAX];
@@ -327,7 +377,11 @@ void DeleteProcess(Page **TempPage, int *NbPage, User *TempUser,char *CDirectory
 
     printf("Are you sure you want to delete page number %d (yes/no): ", PageToDelete + 1);
     scanf("%3s", answer);
+<<<<<<< HEAD
     if (strcmp(answer, "yes") == 0) {
+=======
+    if (strcmp(answer, "yes") == 0 || strcmp(answer, "YES") == 0) {
+>>>>>>> ad4dac80f052243cf93916be91bbbe03abf83da7
         for (int i = PageToDelete; i < *NbPage - 1; i++) {
             (*TempPage)[i] = (*TempPage)[i + 1];
         }
@@ -347,7 +401,11 @@ void DeleteProcess(Page **TempPage, int *NbPage, User *TempUser,char *CDirectory
         } else {
         printf("Do you prefer to change the note? (yes/no): ");
         scanf("%3s", answer);
+<<<<<<< HEAD
         if (strcmp(answer, "yes") == 0) {
+=======
+        if (strcmp(answer, "yes") == 0 || strcmp(answer, "YES") == 0) {
+>>>>>>> ad4dac80f052243cf93916be91bbbe03abf83da7
             WriteInPage(*TempPage, PageToDelete);
         } else {
             printf("Right, returning to the menu.\n");
@@ -457,7 +515,11 @@ void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, 
     printf("Do you want to write in this page? (yes/no): ");
     char answer[4];
     scanf("%3s", answer);
+<<<<<<< HEAD
     if (strcmp(answer, "yes") == 0) {
+=======
+    if (strcmp(answer, "yes") == 0 || strcmp(answer, "YES") == 0) {
+>>>>>>> ad4dac80f052243cf93916be91bbbe03abf83da7
         WriteInPage(*TempPage, page_requested - 1);
     } else {
         BoucleJournal(TempUser, TempPage, &NbPage, PageToDelete, CDirectory, SourcePath, DestinationPath);
@@ -493,7 +555,11 @@ void BoucleJournal(User *TempUser, Page **TempPage, int *NbPage, int PageToDelet
         char answer[4];
         scanf("%s", answer);
         printf("\n");
+<<<<<<< HEAD
         if (strcmp(answer, "yes") == 0) {
+=======
+        if (strcmp(answer, "yes") == 0 || strcmp(answer, "YES") == 0) {
+>>>>>>> ad4dac80f052243cf93916be91bbbe03abf83da7
             menu(TempUser, TempPage, NbPage, CDirectory, SourcePath, DestinationPath, PageToDelete);
         } else {
             ByeJournal(TempUser);
@@ -516,7 +582,11 @@ void menu(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory, char *
                 CreatePage(TempUser, TempPage, NbPage, CDirectory);
                 break;
             case 2:
+<<<<<<< HEAD
                 DeleteProcess(TempPage, NbPage, TempUser, CDirectory,SourcePath, DestinationPath);
+=======
+                DeletePageProcess(TempPage, NbPage, TempUser, CDirectory,SourcePath, DestinationPath);
+>>>>>>> ad4dac80f052243cf93916be91bbbe03abf83da7
                 break;
             case 3:
                 ConsultPage(TempPage, PageToDelete, *NbPage, TempUser, CDirectory, SourcePath, DestinationPath);
