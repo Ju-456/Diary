@@ -135,7 +135,7 @@ void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *
     scanf("%3s", answer);
 
     if (strcmp(answer, "no") == 0 || strcmp(answer, "NO") == 0) {
-        FILE *file = fopen("password.txt", "a"); // create if doesn't exist
+        FILE *file = fopen("password.txt", "a"); // create bc doesn't exist
         printf("Go to create an account!\n");
         SignInUser(TempUser, CDirectory, TempPage, NbPage, PageToDelete, file, SourcePath, DestinationPath);
     } else {
@@ -215,6 +215,11 @@ void SignInUser(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, 
     PersonalAccess();
     printf("Choose a user id: ");
     scanf("%14s", TempUser->UId);
+    // Just in case
+    if (TempUser == NULL) {
+    printf("Error: TempUser is not allocated.\n");
+    return;
+}
 
     printf("Enter a password: ");
     scanf("%14s", TempUser->UPass);
@@ -536,7 +541,8 @@ void menu(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory, char *
 }
 
 int main() {
-    User *TempUser; // pointeur ?
+
+    User *TempUser = malloc(sizeof(User));
     Page *TempPage = NULL;
     int NbPage = 0;
     int PageToDelete = 0;
