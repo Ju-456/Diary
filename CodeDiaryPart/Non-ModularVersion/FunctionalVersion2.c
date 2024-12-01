@@ -19,14 +19,12 @@
 
 #define SizeMaxPage 1024
 
-typedef struct
-{
+typedef struct{
     char UId[15];
     char UPass[15];
 } User;
 
-typedef struct
-{
+typedef struct{
     char password[11];      // 10 characters max
     char note[SizeMaxPage]; // max page size
 } Page;
@@ -63,8 +61,7 @@ void PersonalAccess();
 void ByeJournal(User *TempUser);
 
 
-void WelcomeJournal()
-{
+void WelcomeJournal(){
     printf(
         "***********************\n"
         "***********_***********\n"
@@ -84,8 +81,7 @@ void WelcomeJournal()
     printf("\n");
 }
 
-void PersonalAccess()
-{
+void PersonalAccess(){
     printf(
         "***********************\n"
         "***********_***********\n"
@@ -106,8 +102,7 @@ void PersonalAccess()
     printf("\n");
 }
 
-void ByeJournal(User *TempUser)
-{
+void ByeJournal(User *TempUser){
     printf(
         "***********************\n"
         "***********_***********\n"
@@ -129,8 +124,7 @@ void ByeJournal(User *TempUser)
     exit(0);
 }
 
-void CurrentDirectory(char *CDirectory, FILE *file)
-{
+void CurrentDirectory(char *CDirectory, FILE *file){
     if (getcwd(CDirectory, PATH_MAX) != NULL)
     {
         // printf("Current directory: %s\n", CDirectory);
@@ -141,8 +135,7 @@ void CurrentDirectory(char *CDirectory, FILE *file)
     }
 }
 
-void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath)
-{
+void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath){
     printf("Do you already compile this programm on your PC ? (yes/no): ");
     char answer[4];
     scanf("%3s", answer);
@@ -169,8 +162,7 @@ void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *
     }
 }
 
-void VerificationCreationPasswordtxt(FILE *file, char *CDirectory)
-{
+void VerificationCreationPasswordtxt(FILE *file, char *CDirectory){
     char *PathPassword[PATH_MAX];
     snprintf(*PathPassword, PATH_MAX, "%s/password.txt", CDirectory);
     if (*PathPassword == NULL)
@@ -183,8 +175,7 @@ void VerificationCreationPasswordtxt(FILE *file, char *CDirectory)
     }
 }
 
-void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, char *SourcePath, char *DestinationPath)
-{
+void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, char *SourcePath, char *DestinationPath){
     char answer[4];
     char VTempUserUId[15], VTempUserUPass[15];
     char PathUser[80];
@@ -237,8 +228,7 @@ void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, in
     }
 }
 
-void SignInUser(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath)
-{
+void SignInUser(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath){
     char UPass2[15];
     PersonalAccess();
     printf("Choose a user id: ");
@@ -265,8 +255,7 @@ void SignInUser(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, 
     }
 }
 
-void FolderCreation(char *CDirectory, User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath)
-{
+void FolderCreation(char *CDirectory, User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath){
     char TempUserFoldPath[PATH_MAX];
     char TempUserFoldPathbis[PATH_MAX];
     snprintf(TempUserFoldPath, PATH_MAX, "%s/%s", CDirectory, TempUser->UId);
@@ -295,8 +284,7 @@ void FolderCreation(char *CDirectory, User *TempUser, Page **TempPage, int *NbPa
     }
 }
 
-void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
-{
+void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory){
     *TempPage = realloc(*TempPage, (*NbPage + 1) * sizeof(Page));
     if (*TempPage == NULL)
     {
@@ -312,8 +300,7 @@ void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
     SaveToFile(TempUser, NbPage, *TempPage, CDirectory);
 }
 
-void SaveToFile(User *TempUser, int *NbPage, Page *TempPage, char *CDirectory)
-{
+void SaveToFile(User *TempUser, int *NbPage, Page *TempPage, char *CDirectory){
     char userFolderPath[PATH_MAX];
     snprintf(userFolderPath, PATH_MAX, "%s/%s", CDirectory, TempUser->UId);
     if (chdir(userFolderPath) != 0)
@@ -342,8 +329,7 @@ void SaveToFile(User *TempUser, int *NbPage, Page *TempPage, char *CDirectory)
     printf("All pages saved successfully in individual files.\n");
 }
 
-void DeletePageProcess(Page **TempPage, int *NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath)
-{
+void DeletePageProcess(Page **TempPage, int *NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath){
     int PageToDelete;
     char answer[4];
     char TempUserFoldPath[PATH_MAX];
@@ -399,8 +385,7 @@ void DeletePageProcess(Page **TempPage, int *NbPage, User *TempUser, char *CDire
     }
 }
 
-int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, char *CDirectory, int PageToDelete, int *NbPage, Page **TempPage)
-{
+int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, char *CDirectory, int PageToDelete, int *NbPage, Page **TempPage){
     char TempUserFoldPath[PATH_MAX];
     snprintf(SourcePath, PATH_MAX, "%s/%s/Page1.txt", CDirectory, TempUser->UId);
     FILE *Source = fopen(SourcePath, "rb");
@@ -457,8 +442,7 @@ int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, c
     }
 }
 
-void EnterPasswordPage(Page *TempPage, int page_index, int *NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath, int PageToDelete)
-{
+void EnterPasswordPage(Page *TempPage, int page_index, int *NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath, int PageToDelete){
     char password[11];
     int TooLate = 0;
 
@@ -492,8 +476,7 @@ void EnterPasswordPage(Page *TempPage, int page_index, int *NbPage, User *TempUs
     }
 }
 
-void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath)
-{
+void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath){
     int page_requested;
     printf("Which page do you want to consult? (number): ");
     scanf("%d", &page_requested);
@@ -516,8 +499,7 @@ void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, 
     }
 }
 
-void WriteInPage(Page *TempPage, int page_index)
-{
+void WriteInPage(Page *TempPage, int page_index){
     time_t timestamp = time(NULL);
     struct tm *FrenchHour = localtime(&timestamp);
 
@@ -536,8 +518,7 @@ void WriteInPage(Page *TempPage, int page_index)
     printf("The note was changed successfully.\n");
 }
 
-void BoucleJournal(User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, char *CDirectory, char *SourcePath, char *DestinationPath)
-{
+void BoucleJournal(User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, char *CDirectory, char *SourcePath, char *DestinationPath){
     while (1)
     {
         menu(TempUser, TempPage, NbPage, CDirectory, SourcePath, DestinationPath, PageToDelete);
@@ -556,8 +537,7 @@ void BoucleJournal(User *TempUser, Page **TempPage, int *NbPage, int PageToDelet
     }
 }
 
-void menu(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory, char *SourcePath, char *DestinationPath, int PageToDelete)
-{
+void menu(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory, char *SourcePath, char *DestinationPath, int PageToDelete){
     int choice = 0;
     printf(
         "\n1. Create Page\n"
@@ -586,8 +566,7 @@ void menu(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory, char *
     }
 }
 
-int main()
-{
+int main(){
     User *TempUser = malloc(sizeof(User));
     Page *TempPage = NULL;
     int NbPage = 0;
