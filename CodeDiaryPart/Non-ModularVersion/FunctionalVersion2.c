@@ -56,12 +56,12 @@ void EnterPasswordPage(Page *TempPage, int page_index, int *NbPage, User *TempUs
 void WriteInPage(Page *TempPage, int page_index);
 
 // Decoration functions
-void WelcomeJournal();
+void WelcomeDiary();
 void PersonalAccess();
 void ByeJournal(User *TempUser);
 
 
-void WelcomeJournal(){
+void WelcomeDiary(){
     printf(
         "***********************\n"
         "***********_***********\n"
@@ -136,7 +136,8 @@ void CurrentDirectory(char *CDirectory, FILE *file){
 }
 
 void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath){
-    printf("Do you already compile this programm on your PC ? (yes/no): ");
+    WelcomeDiary();
+    printf("Do you already use this diary ? (yes/no): ");
     char answer[4];
     scanf("%3s", answer);
     if (strcmp(answer, "no") == 0 || strcmp(answer, "NO") == 0)
@@ -578,7 +579,7 @@ int main(){
     // printf("CD= %s", CDirectory);
     CurrentDirectory(CDirectory, file);
     CodeImplementation(TempUser, CDirectory, &TempPage, &NbPage, PageToDelete, file, SourcePath, DestinationPath);
-    WelcomeJournal();
+    WelcomeDiary();
     while (1)
     {
         BoucleJournal(TempUser, &TempPage, &NbPage, PageToDelete, CDirectory, SourcePath, DestinationPath);
