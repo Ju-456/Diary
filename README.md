@@ -22,18 +22,13 @@ Here are the different components available to you:
 These are additional branches I developed for specific features, which you can explore or utilize if needed.  
 
 ### 📦 Modular Version  
-An older modular version of the project (maybe a new one is planned for later).  
-
-### Non-Modular Version 
-**✅ Functional Version**  
-**FunctionalVersion.c**  —> a fully operational version of the journal (but with missing features).
-**FunctionalVersion2.c**  —> a fully operational version of the journal _with the new features_.
-
-**⚠️ Work-in-Progress Version**  
-**Non-FunctionalV2.c**  —> a version currently under development, with some pointer issues to resolve. When this version will be finish, it'll be the better of all : it'll contain all the new features of FunctionalVersion2.c while being more optimized with much less pointer calls.
+**LanguageCVersion**  —> operational version but need revisions.
 
 **🎯 In progress : creation of a graphical interface in java **
 --- 
+**⚠️ Work-in-Progress Version**  
+**JavaVersion**  —> a version currently under development.
+
 To be continued...
 
 Feel free to follow the project's progress, give it a try, and share your feedback with me! Enjoy ! 🚀
