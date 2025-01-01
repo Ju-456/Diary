@@ -280,7 +280,7 @@ void FolderCreation(Path *AllPath, User *TempUser, Page **TempPage, int *NbPage,
         printf("User account successfully created.\n");
         // Creation répertoire des pages bloqués en même temps que creation du compte
         snprintf(TempUserFoldPathbis, PATH_MAX, "%s/%s/BlockedPages", AllPath->CDirectory, TempUser->UId);
-        menu(TempUser, TempPage, NbPage, CDirectory, PageToDelete);
+        menu(TempUser, TempPage, NbPage, AllPath, PageToDelete);
     }
     else
     {
@@ -385,7 +385,7 @@ void DeletePageProcess(Page **TempPage, int *NbPage, User *TempUser, Path *AllPa
         else
         {
             printf("Right, returning to the menu.\n");
-            menu(TempUser, TempPage, NbPage, AllPath->CDirectory, PageToDelete);
+            menu(TempUser, TempPage, NbPage, AllPath, PageToDelete);
         }
     }
 }
@@ -415,7 +415,7 @@ int BlockedAccessPage(Path *AllPath, User *TempUser, int PageToDelete, int *NbPa
     }
     fclose(Source);
     fclose(destination);
-    printf("Fichier copié avec succès de %s vers %s\n");
+    printf("Fichier copié avec succès de %s vers %s\n", AllPath->SourcePath, AllPath->DestinationPath);
     if (BlockedAccessPage(AllPath, TempUser, PageToDelete, NbPage, TempPage) == 0)
     {
         for (int i = PageToDelete; i < *NbPage - 1; i++)
@@ -490,7 +490,7 @@ void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, 
         printf("This page doesn't exist.\n"); // ou peut être bloqué
         return;
     }
-    EnterPasswordPage(*TempPage, page_requested - 1, &NbPage, TempUser, AllPath->CDirectory, PageToDelete);
+    EnterPasswordPage(*TempPage, page_requested - 1, &NbPage, TempUser, AllPath, PageToDelete);
     printf("Do you want to write in this page? (yes/no): ");
     char answer[4];
     scanf("%3s", answer);
@@ -577,7 +577,7 @@ int main(){
     Page *TempPage = NULL;
     int NbPage = 0;
     int PageToDelete = 0;
-    FILE *file = fopen(AllPath, "w");
+    FILE *file = fopen(AllPath->CDirectory, "w");
     CurrentDirectory(AllPath, file);
     CodeImplementation(TempUser, AllPath, &TempPage, &NbPage, PageToDelete, file);
     WelcomeJournal();
