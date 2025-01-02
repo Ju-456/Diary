@@ -79,10 +79,23 @@ void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, 
     int page_requested;
     printf("Which page do you want to consult? (number): ");
     scanf("%d", &page_requested);
-    if (page_requested > NbPage || page_requested <= 0)
+    if (page_requested = 0)
     {
-        printf("This page doesn't exist.\n"); // ou peut être bloqué
-        return;
+        printf("Please, enter a number greater than zero :\n");
+        scanf("%d", &page_requested);
+    }
+    else if (page_requested != 0)
+    {   
+        char TempUserFoldPath[PATH_MAX];
+        snprintf(TempUserFoldPath, PATH_MAX, "%s/%s/Page%d.txt", CDirectory, TempUser->UId, page_requested);
+            FILE *file = fopen("password.txt", "r");
+            if (file) {
+            printf("The Page %d was open successfully : \n", page_requested);
+            
+            fclose(file); // Fermer le fichier une fois terminé
+        } else {
+            perror("Error opening the page");
+        }
     }
     EnterPasswordPage(*TempPage, page_requested - 1, &NbPage, TempUser, CDirectory, SourcePath, DestinationPath, PageToDelete);
     printf("Do you want to write in this page? (yes/no): ");

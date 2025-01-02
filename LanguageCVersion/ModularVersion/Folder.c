@@ -58,31 +58,45 @@ void VerificationCreationPasswordtxt(FILE *file, char *CDirectory){
 
 
 void FolderCreation(char *CDirectory, User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath){
-    char TempUserFoldPath[PATH_MAX];
-    char TempUserFoldPathbis[PATH_MAX];
-    snprintf(TempUserFoldPath, PATH_MAX, "%s/%s", CDirectory, TempUser->UId);
-    if (CREATE_DIR(TempUserFoldPath) == 0)
+    char AccountPasswordPath[PATH_MAX]; 
+    char PagesPasswordPath[PATH_MAX]; 
+    char BlockedPagesPath[PATH_MAX]; 
+
+    snprintf(AccountPasswordPath, PATH_MAX, "%s/%s", CDirectory, TempUser->UId);
+    if (CREATE_DIR(AccountPasswordPath) == 0)
     {
-        // printf("User folder successfully created: %s\n", TempUserFoldPath);
+        // printf("User folder successfully created: %s\n", AccountPasswordPath);
         char PassFilePath[PATH_MAX];
-        snprintf(PassFilePath, PATH_MAX, "%s/password.txt", CDirectory);
+        snprintf(PassFilePath, PATH_MAX, "%s/AccountPassword.txt", CDirectory);
         FILE *Afile = fopen(PassFilePath, "a");
         if (Afile == NULL)
         {
-            perror("Error opening password.txt");
+            perror("Error opening AccountPassword.txt");
             return;
         }
         fprintf(Afile, "%s %s\n", TempUser->UId, TempUser->UPass);
         fclose(Afile);
         printf("User account successfully created.\n");
-        // Creation répertoire des pages bloqués en même temps que creation du compte
-        snprintf(TempUserFoldPathbis, PATH_MAX, "%s/%s/BlockedPages", CDirectory, TempUser->UId);
-        //FILE *Bfile = fopen(TempUserFoldPathbis, "a");
-        if (CREATE_DIR(TempUserFoldPathbis) == 0)
+
+        // Creation of PagesPassword.txt in the same time
+        snprintf(PagesPasswordPath, PATH_MAX, "%s/%s/PagesPassword.txt", CDirectory, TempUser->UId);
+        FILE *Bfile = fopen(PagesPasswordPath, "a");
+        if (Bfile == NULL)
+        {
+            perror("Error opening PagesPassword.txt");
+            return;
+        }
+        fclose(Bfile);
+        
+        // Creation of BlockedPages in the same time
+        snprintf(BlockedPagesPath, PATH_MAX, "%s/%s/BlockedPages", CDirectory, TempUser->UId);
+        if (CREATE_DIR(BlockedPagesPath) == 0)
         {
             perror("Error opening BlockedPages");
             return;
         }
+
+        // return to the menu after do all things concerning an opening of a new account
         menu(TempUser, TempPage, NbPage, CDirectory, SourcePath, DestinationPath, PageToDelete);
     }
     else

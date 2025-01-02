@@ -44,7 +44,7 @@ void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, in
                 else
                 {
                     printf("Access blocked. Contact support.\n");
-                    return;
+                    exit(0);
                 }
             }
             if (strcmp(VTempUserUId, TempUser->UId) == 0 && strcmp(VTempUserUPass, TempUser->UPass) == 0)
