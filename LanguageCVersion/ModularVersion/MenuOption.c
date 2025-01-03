@@ -3,32 +3,68 @@
 
 #include "Diary.h"
 
-void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory){
+void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory) {
+    int CurrentNumberPage;
+    
     *TempPage = realloc(*TempPage, (*NbPage + 1) * sizeof(Page));
-    if (*TempPage == NULL)
-    {
+    if (*TempPage == NULL) {
         printf("Error allocating memory.\n");
         exit(1);
     }
+
     printf("Enter the password (max 10 characters) : ");
     scanf("%10s", (*TempPage)[*NbPage].password);
     
     char PagesPasswordPath[PATH_MAX];
     snprintf(PagesPasswordPath, PATH_MAX, "%s/%s/PagesPassword.txt", CDirectory, TempUser->UId);
-    FILE *Bfile = fopen(PagesPasswordPath, "a");
-    if (Bfile == NULL)
-    {
+
+    FILE *Bfile = fopen(PagesPasswordPath, "r+");
+    if (Bfile == NULL) {
         perror("Error opening PagesPassword.txt");
         return;
     }
-    fprintf(Bfile, "mdp%d : %s\n", *NbPage + 1, (*TempPage)[*NbPage].password);
+
+    FILE *tempFile = fopen("temp.txt", "w");
+    if (tempFile == NULL) {
+        perror("Error creating temporary file");
+        fclose(Bfile);
+        return;
+    }
+
+    char ChangeNumberPage[256];
+    int pageFound = 0;
+
+    // Maj of ChangeNumberPage
+    while (fgets(ChangeNumberPage, sizeof(ChangeNumberPage), Bfile)) {
+        if (strstr(ChangeNumberPage, "Current Number of Page") != NULL) {
+            fprintf(tempFile, "Current Number of Page : %d\n", *NbPage + 1);
+            pageFound = 1;
+        } else {
+            fputs(ChangeNumberPage, tempFile);
+        }
+    }
+
+    if (!pageFound) {
+        fprintf(tempFile, "Current Number of Page : %d\n", *NbPage + 1);
+    }
+
+    fprintf(tempFile, "mdp%d : %s\n", *NbPage + 1, (*TempPage)[*NbPage].password);
+
     fclose(Bfile);
+    fclose(tempFile);
+
+    // Delete temporary file
+    remove(PagesPasswordPath);
+    rename("temp.txt", PagesPasswordPath);
 
     printf("Write your page (max 1024 characters):\n ");
-    getchar();
+    getchar(); 
     fgets((*TempPage)[*NbPage].note, SizeMaxPage, stdin);
+
     (*NbPage)++;
     SaveToFile(TempUser, NbPage, *TempPage, CDirectory);
+
+    printf("Page created successfully.\n");
 }
 
 void DeletePageProcess(Page **TempPage, int *NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath){
