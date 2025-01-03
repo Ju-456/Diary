@@ -12,6 +12,18 @@ void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory){
     }
     printf("Enter the password (max 10 characters) : ");
     scanf("%10s", (*TempPage)[*NbPage].password);
+    
+    char PagesPasswordPath[PATH_MAX];
+    snprintf(PagesPasswordPath, PATH_MAX, "%s/%s/PagesPassword.txt", CDirectory, TempUser->UId);
+    FILE *Bfile = fopen(PagesPasswordPath, "a");
+    if (Bfile == NULL)
+    {
+        perror("Error opening PagesPassword.txt");
+        return;
+    }
+    fprintf(Bfile, "mdp%d : %s\n", *NbPage + 1, (*TempPage)[*NbPage].password);
+    fclose(Bfile);
+
     printf("Write your page (max 1024 characters):\n ");
     getchar();
     fgets((*TempPage)[*NbPage].note, SizeMaxPage, stdin);
@@ -88,11 +100,11 @@ void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, 
     {   
         char TempUserFoldPath[PATH_MAX];
         snprintf(TempUserFoldPath, PATH_MAX, "%s/%s/Page%d.txt", CDirectory, TempUser->UId, page_requested);
-            FILE *file = fopen("password.txt", "r");
+            FILE *file = fopen("AccountPassword.txt", "r");
             if (file) {
             printf("The Page %d was open successfully : \n", page_requested);
             
-            fclose(file); // Fermer le fichier une fois terminé
+            fclose(file); 
         } else {
             perror("Error opening the page");
         }

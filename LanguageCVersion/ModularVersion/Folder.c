@@ -22,13 +22,13 @@ void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *
     scanf("%3s", answer);
     if (strcmp(answer, "no") == 0 || strcmp(answer, "NO") == 0)
     {
-        FILE *file = fopen("password.txt", "a"); // create bc doesn't exist
+        FILE *file = fopen("AccountPassword.txt", "a"); // create bc doesn't exist
         printf("Go to create an account!\n");
         SignInUser(TempUser, CDirectory, TempPage, NbPage, PageToDelete, file, SourcePath, DestinationPath);
     }
     else
     {
-        FILE *file = fopen("password.txt", "r"); // on pourrait mettre "a" par précaution mais ça ecraserait le précédent, s'il a déjà des données..
+        FILE *file = fopen("AccountPassword.txt", "r"); // on pourrait mettre "a" par précaution mais ça ecraserait le précédent, s'il a déjà des données..
         if (file != NULL)
         {   
             printf("So... we can start it !\n");
@@ -45,7 +45,7 @@ void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *
 
 void VerificationCreationPasswordtxt(FILE *file, char *CDirectory){
     char *PathPassword[PATH_MAX];
-    snprintf(*PathPassword, PATH_MAX, "%s/password.txt", CDirectory);
+    snprintf(*PathPassword, PATH_MAX, "%s/AccountPassword.txt", CDirectory);
     if (*PathPassword == NULL)
     {
         printf("Failed to create password repository.\n");

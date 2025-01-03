@@ -29,9 +29,18 @@ void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, in
     {
         printf("Enter the password: ");
         scanf("%14s", VTempUserUPass);
-        if (fscanf(file, "%14s %14s", TempUser->UId, TempUser->UPass) != EOF)
+
+        snprintf(PathUser, PATH_MAX, "%s/%s/AccountPassword.txt", CDirectory, VTempUserUId);
+        FILE *Afile = fopen(PathUser, "r");
+        if (Afile == NULL)
         {
-            int TooLate = 0;
+            perror("Error opening AccountPassword.txt");
+            return;
+        }
+
+        int TooLate = 0;
+        while (fscanf(Afile, "%14s %14s", TempUser->UId, TempUser->UPass) != EOF)
+        {
             while (strcmp(VTempUserUPass, TempUser->UPass) != 0 && TooLate < 3)
             {
                 TooLate++;
@@ -44,15 +53,23 @@ void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, in
                 else
                 {
                     printf("Access blocked. Contact support.\n");
+                    fclose(Afile);
                     exit(0);
                 }
             }
+
             if (strcmp(VTempUserUId, TempUser->UId) == 0 && strcmp(VTempUserUPass, TempUser->UPass) == 0)
             {
+                printf("*Authorized access.*\n");
                 PersonalAccess();
                 menu(TempUser, TempPage, NbPage, CDirectory, SourcePath, DestinationPath, PageToDelete);
+                fclose(Afile);
+                return;
             }
         }
+
+        printf("Invalid user ID or password.\n");
+        fclose(Afile);
     }
 }
 

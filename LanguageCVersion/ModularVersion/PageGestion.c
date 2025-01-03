@@ -3,7 +3,8 @@
 
 #include "Diary.h"
 
-void SaveToFile(User *TempUser, int *NbPage, Page *TempPage, char *CDirectory){
+void SaveToFile(User *TempUser, int *NbPage, Page *TempPage, char *CDirectory)
+{
     char userFolderPath[PATH_MAX];
     snprintf(userFolderPath, PATH_MAX, "%s/%s", CDirectory, TempUser->UId);
     if (chdir(userFolderPath) != 0)
@@ -33,7 +34,8 @@ void SaveToFile(User *TempUser, int *NbPage, Page *TempPage, char *CDirectory){
 }
 
 // to generalize
-int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, char *CDirectory, int PageToDelete, int *NbPage, Page **TempPage){
+int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, char *CDirectory, int PageToDelete, int *NbPage, Page **TempPage)
+{
     char TempUserFoldPath[PATH_MAX];
     snprintf(SourcePath, PATH_MAX, "%s/%s/Page%d.txt", CDirectory, TempUser->UId, *NbPage);
     FILE *Source = fopen(SourcePath, "rb");
@@ -90,18 +92,44 @@ int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, c
     }
 }
 
-
-void EnterPasswordPage(Page *TempPage, int page_index, int *NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath, int PageToDelete){
+void EnterPasswordPage(Page *TempPage, int page_index, int *NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath, int PageToDelete)
+{
     char password[11];
     int TooLate = 0;
 
     printf("Enter the password for this page (you have 3 attempts):\n ");
-
+    // verifier localement et pas de manière ephemere
     while (TooLate < 3)
     {
         printf("Attempt %d: ", TooLate + 1);
         scanf("%10s", password);
-        if (strcmp(TempPage[page_index].password, password) == 0)
+
+        char PagesPasswordPath[PATH_MAX];
+        snprintf(PagesPasswordPath, PATH_MAX, "%s/%s/PagesPassword.txt", CDirectory, TempUser->UId);
+
+        FILE *Bfile = fopen(PagesPasswordPath, "r");
+        if (Bfile == NULL)
+        {
+            perror("Error opening PagesPassword.txt");
+            return;
+        }
+
+        char line[256];
+        int found = 0; 
+
+        while (fgets(line, sizeof(line), Bfile))
+        {
+            char expected_line[256];
+            snprintf(expected_line, sizeof(expected_line), "mdp%d : %s\n", *NbPage, password);
+
+            if (strcmp(line, expected_line) == 0)
+            {
+                found = 1; // right password
+                break;     
+            }
+        }
+        fclose(Bfile); 
+        if (found)
         {
             printf("*Authorized access.*\n");
             printf("Note: %s\n", TempPage[page_index].note);
@@ -125,8 +153,8 @@ void EnterPasswordPage(Page *TempPage, int page_index, int *NbPage, User *TempUs
     }
 }
 
-
-void WriteInPage(Page *TempPage, int page_index){
+void WriteInPage(Page *TempPage, int page_index)
+{
     time_t timestamp = time(NULL);
     struct tm *FrenchHour = localtime(&timestamp);
 
@@ -146,4 +174,3 @@ void WriteInPage(Page *TempPage, int page_index){
 }
 
 #endif
-
