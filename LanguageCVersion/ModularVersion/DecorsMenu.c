@@ -4,7 +4,8 @@
 #include "Diary.h"
 #include "PageGestion.c"
 
-void WelcomeDiary(){
+void WelcomeDiary()
+{
     printf(
         "***********************\n"
         "***********_***********\n"
@@ -24,7 +25,8 @@ void WelcomeDiary(){
     printf("\n");
 }
 
-void PersonalAccess(){
+void PersonalAccess()
+{
     printf(
         "***********************\n"
         "***********_***********\n"
@@ -45,7 +47,8 @@ void PersonalAccess(){
     printf("\n");
 }
 
-void ByeJournal(User *TempUser){
+void ByeJournal(User *TempUser)
+{
     printf(
         "***********************\n"
         "***********_***********\n"
@@ -67,8 +70,8 @@ void ByeJournal(User *TempUser){
     exit(0);
 }
 
-
-void BoucleJournal(User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, char *CDirectory, char *SourcePath, char *DestinationPath){
+void BoucleJournal(User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, char *CDirectory, char *SourcePath, char *DestinationPath)
+{
     while (1)
     {
         menu(TempUser, TempPage, NbPage, CDirectory, SourcePath, DestinationPath, PageToDelete);
@@ -87,7 +90,8 @@ void BoucleJournal(User *TempUser, Page **TempPage, int *NbPage, int PageToDelet
     }
 }
 
-void menu(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory, char *SourcePath, char *DestinationPath, int PageToDelete){
+void menu(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory, char *SourcePath, char *DestinationPath, int PageToDelete)
+{
     int choice = 0;
     printf(
         "\n1. Create Page\n"

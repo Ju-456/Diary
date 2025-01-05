@@ -3,7 +3,8 @@
 #include "DecorsMenu.c"
 #include "MenuOption.c"
 
-int main(){
+int main()
+{
     User *TempUser = malloc(sizeof(User));
     Page *TempPage = NULL;
     int NbPage = 0;

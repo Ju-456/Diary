@@ -3,13 +3,15 @@
 
 #include "Diary.h"
 
-void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, char *SourcePath, char *DestinationPath){
+void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, char *SourcePath, char *DestinationPath)
+{
     char answer[4];
-    char VTempUserUId[15], VTempUserUPass[15];
+    char VTempUserUId[15], VTempUserUPass[15]; // regeneralize if true
     char PathUser[80];
     printf("Enter your user ID: ");
     scanf("%14s", VTempUserUId);
     snprintf(PathUser, PATH_MAX, "%s/%s", CDirectory, VTempUserUId);
+    // printf("%s",PathUser); chemin correct
 
     if (access(PathUser, F_OK) != 0)
     {
@@ -73,7 +75,8 @@ void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, in
     }
 }
 
-void SignInUser(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath){
+void SignInUser(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath)
+{
     char UPass2[15];
     PersonalAccess();
     printf("Choose a user id: ");

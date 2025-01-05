@@ -22,12 +22,14 @@
 
 #define SizeMaxPage 1024
 
-typedef struct{
+typedef struct
+{
     char UId[15];
     char UPass[15];
 } User;
 
-typedef struct{
+typedef struct
+{
     char password[11];      // 10 characters max
     char note[SizeMaxPage]; // max page size
 } Page;

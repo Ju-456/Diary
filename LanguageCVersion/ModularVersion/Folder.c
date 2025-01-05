@@ -4,7 +4,8 @@
 #include "Diary.h"
 #include "UserLogSign.c"
 
-void CurrentDirectory(char *CDirectory, FILE *file){
+void CurrentDirectory(char *CDirectory, FILE *file)
+{
     if (getcwd(CDirectory, PATH_MAX) != NULL)
     {
         // printf("Current directory: %s\n", CDirectory);
@@ -15,7 +16,8 @@ void CurrentDirectory(char *CDirectory, FILE *file){
     }
 }
 
-void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath){
+void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath)
+{
     WelcomeDiary();
     printf("Do you already use this diary ? (yes/no): ");
     char answer[4];
@@ -30,7 +32,7 @@ void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *
     {
         FILE *file = fopen("AccountPassword.txt", "r"); // on pourrait mettre "a" par précaution mais ça ecraserait le précédent, s'il a déjà des données..
         if (file != NULL)
-        {   
+        {
             printf("So... we can start it !\n");
             LogInUser(file, CDirectory, TempUser, TempPage, NbPage, PageToDelete, SourcePath, DestinationPath);
             fclose(file);
@@ -43,7 +45,8 @@ void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *
     }
 }
 
-void VerificationCreationPasswordtxt(FILE *file, char *CDirectory){
+void VerificationCreationPasswordtxt(FILE *file, char *CDirectory)
+{
     char *PathPassword[PATH_MAX];
     snprintf(*PathPassword, PATH_MAX, "%s/AccountPassword.txt", CDirectory);
     if (*PathPassword == NULL)
@@ -56,25 +59,25 @@ void VerificationCreationPasswordtxt(FILE *file, char *CDirectory){
     }
 }
 
-
-void FolderCreation(char *CDirectory, User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath){
-    //char BlockedUserAccountPath[PATH_MAX];
-    char AccountPasswordPath[PATH_MAX]; 
-    char PagesPasswordPath[PATH_MAX]; 
-    char BlockedPagesPath[PATH_MAX]; 
+void FolderCreation(char *CDirectory, User *TempUser, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath)
+{
+    // char BlockedUserAccountPath[PATH_MAX];
+    char AccountPasswordPath[PATH_MAX];
+    char PagesPasswordPath[PATH_MAX];
+    char BlockedPagesPath[PATH_MAX];
 
     snprintf(AccountPasswordPath, PATH_MAX, "%s/%s", CDirectory, TempUser->UId);
     if (CREATE_DIR(AccountPasswordPath) == 0)
-    {   /*
-        // Creation of BlockedUserAccount in the same time
-        snprintf(BlockedUserAccountPath, PATH_MAX, "%s/BlockedPages", CDirectory);
-        if (CREATE_DIR(BlockedUserAccountPath) == 0)
-        {
-            perror("Error opening BlockedUserAccount");
-            return;
-        } 
-        // Idk if it's a great idea
-        */
+    { /*
+      // Creation of BlockedUserAccount in the same time
+      snprintf(BlockedUserAccountPath, PATH_MAX, "%s/BlockedPages", CDirectory);
+      if (CREATE_DIR(BlockedUserAccountPath) == 0)
+      {
+          perror("Error opening BlockedUserAccount");
+          return;
+      }
+      // Idk if it's a great idea
+      */
         // printf("User folder successfully created: %s\n", AccountPasswordPath);
         char PassFilePath[PATH_MAX];
         snprintf(PassFilePath, PATH_MAX, "%s/AccountPassword.txt", CDirectory);
@@ -97,7 +100,7 @@ void FolderCreation(char *CDirectory, User *TempUser, Page **TempPage, int *NbPa
             return;
         }
         fclose(Bfile);
-        
+
         // Creation of BlockedPages in the same time
         snprintf(BlockedPagesPath, PATH_MAX, "%s/%s/BlockedPages", CDirectory, TempUser->UId);
         if (CREATE_DIR(BlockedPagesPath) == 0)

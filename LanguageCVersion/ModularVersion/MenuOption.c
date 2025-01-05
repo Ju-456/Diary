@@ -3,71 +3,83 @@
 
 #include "Diary.h"
 
-void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory) {
-    int CurrentNumberPage;
-    
+void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
+{
+    char ChangeNumberPage[256];
+    char PagesPasswordPath[PATH_MAX];
+    int pageFound = 0;
+
     *TempPage = realloc(*TempPage, (*NbPage + 1) * sizeof(Page));
-    if (*TempPage == NULL) {
+    if (*TempPage == NULL)
+    {
         printf("Error allocating memory.\n");
         exit(1);
     }
 
-    printf("Enter the password (max 10 characters) : ");
+    printf("Enter the password (max 10 characters): ");
     scanf("%10s", (*TempPage)[*NbPage].password);
-    
-    char PagesPasswordPath[PATH_MAX];
-    snprintf(PagesPasswordPath, PATH_MAX, "%s/%s/PagesPassword.txt", CDirectory, TempUser->UId);
 
-    FILE *Bfile = fopen(PagesPasswordPath, "r+");
-    if (Bfile == NULL) {
+    snprintf(PagesPasswordPath, PATH_MAX, "%s/%s/PagesPassword.txt", CDirectory, TempUser->UId);
+    printf("Attempting to open: %s\n", TempUser->UId); // c'est vide !!!
+
+    FILE *Bfile = fopen(PagesPasswordPath, "r");
+    if (Bfile == NULL)
+    {
         perror("Error opening PagesPassword.txt");
         return;
     }
 
+    // Create temporary file
     FILE *tempFile = fopen("temp.txt", "w");
-    if (tempFile == NULL) {
+    if (tempFile == NULL)
+    {
         perror("Error creating temporary file");
         fclose(Bfile);
         return;
     }
 
-    char ChangeNumberPage[256];
-    int pageFound = 0;
-
-    // Maj of ChangeNumberPage
-    while (fgets(ChangeNumberPage, sizeof(ChangeNumberPage), Bfile)) {
-        if (strstr(ChangeNumberPage, "Current Number of Page") != NULL) {
+    // Read PagesPassword.txt & maj "Current Number of Page"
+    while (fgets(ChangeNumberPage, sizeof(ChangeNumberPage), Bfile))
+    {
+        if (strstr(ChangeNumberPage, "Current Number of Page") != NULL)
+        {
             fprintf(tempFile, "Current Number of Page : %d\n", *NbPage + 1);
             pageFound = 1;
-        } else {
+        }
+        else
+        {
             fputs(ChangeNumberPage, tempFile);
         }
     }
 
-    if (!pageFound) {
+    if (!pageFound)
+    {
         fprintf(tempFile, "Current Number of Page : %d\n", *NbPage + 1);
     }
 
+    // Add the line for the new mdp
     fprintf(tempFile, "mdp%d : %s\n", *NbPage + 1, (*TempPage)[*NbPage].password);
 
     fclose(Bfile);
     fclose(tempFile);
 
-    // Delete temporary file
+    // Remplace PagesPassword.txt with the temporary file
     remove(PagesPasswordPath);
     rename("temp.txt", PagesPasswordPath);
 
     printf("Write your page (max 1024 characters):\n ");
-    getchar(); 
+    getchar();
     fgets((*TempPage)[*NbPage].note, SizeMaxPage, stdin);
 
     (*NbPage)++;
+
     SaveToFile(TempUser, NbPage, *TempPage, CDirectory);
 
-    printf("Page created successfully.\n");
+    printf("Page n°%d created successfully.\n", *NbPage);
 }
 
-void DeletePageProcess(Page **TempPage, int *NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath){
+void DeletePageProcess(Page **TempPage, int *NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath)
+{
     int PageToDelete;
     char answer[4];
     char TempUserFoldPath[PATH_MAX];
@@ -123,7 +135,8 @@ void DeletePageProcess(Page **TempPage, int *NbPage, User *TempUser, char *CDire
     }
 }
 
-void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath){
+void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath)
+{
     int page_requested;
     printf("Which page do you want to consult? (number): ");
     scanf("%d", &page_requested);
@@ -133,15 +146,18 @@ void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, 
         scanf("%d", &page_requested);
     }
     else if (page_requested != 0)
-    {   
+    {
         char TempUserFoldPath[PATH_MAX];
         snprintf(TempUserFoldPath, PATH_MAX, "%s/%s/Page%d.txt", CDirectory, TempUser->UId, page_requested);
-            FILE *file = fopen("AccountPassword.txt", "r");
-            if (file) {
+        FILE *file = fopen("AccountPassword.txt", "r");
+        if (file)
+        {
             printf("The Page %d was open successfully : \n", page_requested);
-            
-            fclose(file); 
-        } else {
+
+            fclose(file);
+        }
+        else
+        {
             perror("Error opening the page");
         }
     }

@@ -97,8 +97,8 @@ void EnterPasswordPage(Page *TempPage, int page_index, int *NbPage, User *TempUs
     char password[11];
     int TooLate = 0;
 
-    printf("Enter the password for this page (you have 3 attempts):\n ");
-    // verifier localement et pas de manière ephemere
+    printf("Enter the password for this page (you have 3 attempts):\n");
+
     while (TooLate < 3)
     {
         printf("Attempt %d: ", TooLate + 1);
@@ -115,20 +115,33 @@ void EnterPasswordPage(Page *TempPage, int page_index, int *NbPage, User *TempUs
         }
 
         char line[256];
-        int found = 0; 
+        int found = 0;
+        char target[256];
+
+        // Prepare the target identifier for the requested page
+        snprintf(target, sizeof(target), "mdp%d :", page_index + 1);
 
         while (fgets(line, sizeof(line), Bfile))
         {
-            char expected_line[256];
-            snprintf(expected_line, sizeof(expected_line), "mdp%d : %s\n", *NbPage, password);
-
-            if (strcmp(line, expected_line) == 0)
+            if (strncmp(line, target, strlen(target)) == 0)
             {
-                found = 1; // right password
-                break;     
+                // Extract the password stored in the file to verify compatibility
+                char *stored_password = strchr(line, ':');
+                if (stored_password != NULL)
+                {
+                    stored_password += 2; // Skip the colon and the space
+                    stored_password[strcspn(stored_password, "\n")] = '\0';
+
+                    if (strcmp(stored_password, password) == 0)
+                    {
+                        found = 1;
+                        break;
+                    }
+                }
             }
         }
-        fclose(Bfile); 
+        fclose(Bfile);
+
         if (found)
         {
             printf("*Authorized access.*\n");
