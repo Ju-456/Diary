@@ -16,7 +16,6 @@ int main()
 
     CurrentDirectory(CDirectory, file);
     CodeImplementation(TempUser, CDirectory, &TempPage, &NbPage, PageToDelete, file, SourcePath, DestinationPath);
-    WelcomeDiary();
     while (1)
     {
         BoucleJournal(TempUser, &TempPage, &NbPage, PageToDelete, CDirectory, SourcePath, DestinationPath);

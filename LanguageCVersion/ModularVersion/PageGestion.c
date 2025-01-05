@@ -144,7 +144,7 @@ void EnterPasswordPage(Page *TempPage, int page_index, int *NbPage, User *TempUs
 
         if (found)
         {
-            printf("*Authorized access.*\n");
+            printf("*Authorized access.*");
             printf("Note: %s\n", TempPage[page_index].note);
             return;
         }

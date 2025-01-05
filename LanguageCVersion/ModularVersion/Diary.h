@@ -1,5 +1,5 @@
-#ifndef DIARY
-#define DIARY
+#ifndef DIARY_H
+#define DIARY_H
 
 #include <stdio.h>
 #include <stdlib.h>
