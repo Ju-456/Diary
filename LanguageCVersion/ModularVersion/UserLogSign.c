@@ -28,11 +28,13 @@ void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, in
         }
     }
     else
-    {
+    {   
         printf("Enter the password: ");
         scanf("%14s", VTempUserUPass);
 
-        snprintf(PathUser, PATH_MAX, "%s/%s/AccountPassword.txt", CDirectory, VTempUserUId);
+        snprintf(PathUser, PATH_MAX, "%s/AccountPassword.txt", CDirectory);
+        //printf("%s\n",PathUser);
+
         FILE *Afile = fopen(PathUser, "r");
         if (Afile == NULL)
         {
@@ -63,6 +65,7 @@ void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, in
             if (strcmp(VTempUserUId, TempUser->UId) == 0 && strcmp(VTempUserUPass, TempUser->UPass) == 0)
             {
                 printf("*Authorized access.*\n");
+                strcpy(TempUser->UId, VTempUserUId); // copy VTempUserUId to TempUser->UId bc VTempUserUId is right
                 PersonalAccess();
                 menu(TempUser, TempPage, NbPage, CDirectory, SourcePath, DestinationPath, PageToDelete);
                 fclose(Afile);

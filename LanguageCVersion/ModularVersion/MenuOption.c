@@ -149,11 +149,11 @@ void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, 
     {
         char TempUserFoldPath[PATH_MAX];
         snprintf(TempUserFoldPath, PATH_MAX, "%s/%s/Page%d.txt", CDirectory, TempUser->UId, page_requested);
+        printf("%s\n",TempUserFoldPath);
         FILE *file = fopen("AccountPassword.txt", "r");
         if (file)
         {
             printf("The Page %d was open successfully : \n", page_requested);
-
             fclose(file);
         }
         else
