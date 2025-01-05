@@ -43,8 +43,11 @@ void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, in
         }
 
         int TooLate = 0;
-        while (fscanf(Afile, "%14s %14s", TempUser->UId, TempUser->UPass) != EOF)
-        {
+        while (fscanf(Afile, "%14s %14s", TempUser->UId, TempUser->UPass) == 2)
+        {   
+            if (strcmp(VTempUserUId, TempUser->UId) == 0)
+            {
+            
             while (strcmp(VTempUserUPass, TempUser->UPass) != 0 && TooLate < 3)
             {
                 TooLate++;
@@ -64,12 +67,13 @@ void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, in
 
             if (strcmp(VTempUserUId, TempUser->UId) == 0 && strcmp(VTempUserUPass, TempUser->UPass) == 0)
             {
-                printf("*Authorized access.*\n");
+                printf("*Authorized access.*\n\n");
                 strcpy(TempUser->UId, VTempUserUId); // copy VTempUserUId to TempUser->UId bc VTempUserUId is right
                 PersonalAccess();
                 menu(TempUser, TempPage, NbPage, CDirectory, SourcePath, DestinationPath, PageToDelete);
                 fclose(Afile);
                 return;
+            }
             }
         }
 
