@@ -34,7 +34,7 @@ void SaveToFile(User *TempUser, int *NbPage, Page *TempPage, char *CDirectory)
 }
 
 // to generalize
-int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, char *CDirectory, int PageToDelete, int *NbPage, Page **TempPage)
+int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, char *CDirectory, int *PageToDelete, int *NbPage, Page **TempPage)
 {
     char TempUserFoldPath[PATH_MAX];
     snprintf(SourcePath, PATH_MAX, "%s/%s/Page%d.txt", CDirectory, TempUser->UId, *NbPage);
@@ -63,7 +63,7 @@ int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, c
     printf("Fichier copié avec succès de %s vers %s\n", SourcePath, DestinationPath);
     if (BlockedAccessPage(SourcePath, DestinationPath, TempUser, CDirectory, PageToDelete, NbPage, TempPage) == 0)
     {
-        for (int i = PageToDelete; i < *NbPage - 1; i++)
+        for (int i = *PageToDelete; i < *NbPage - 1; i++)
         {
             (*TempPage)[i] = (*TempPage)[i + 1];
         }
@@ -73,10 +73,10 @@ int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, c
             printf("Error allocating memory.\n");
             exit(1);
         }
-        snprintf(TempUserFoldPath, PATH_MAX, "%s/%s/Page%d.txt", CDirectory, TempUser->UId, PageToDelete + 1);
+        snprintf(TempUserFoldPath, PATH_MAX, "%s/%s/Page%d.txt", CDirectory, TempUser->UId, *PageToDelete + 1);
         if (remove(TempUserFoldPath) == 0)
         {
-            printf("Page%d deleted successfully from disk.\n", PageToDelete + 1);
+            printf("Page%d deleted successfully from disk.\n", *PageToDelete + 1);
         }
         else
         {
@@ -92,76 +92,79 @@ int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, c
     }
 }
 
-void EnterPasswordPage(Page *TempPage, int page_index, int *NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath, int PageToDelete)
+void EnterPasswordPage(Page *TempPage, int *page_index, int *NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath, int *PageToDelete)
 {
     char password[11];
     int TooLate = 0;
 
     printf("Enter the password for this page (you have 3 attempts):\n");
 
-    while (TooLate < 3)
+    char PagesPasswordPath[PATH_MAX];
+    snprintf(PagesPasswordPath, PATH_MAX, "%s/%s/PagesPassword.txt", CDirectory, TempUser->UId);
+
+    FILE *Bfile = fopen(PagesPasswordPath, "r");
+    if (Bfile == NULL)
     {
-        printf("Attempt %d: ", TooLate + 1);
-        scanf("%10s", password);
+        perror("Error opening PagesPassword.txt");
+        return;
+    }
 
-        char PagesPasswordPath[PATH_MAX];
-        snprintf(PagesPasswordPath, PATH_MAX, "%s/%s/PagesPassword.txt", CDirectory, TempUser->UId);
+    char line[256];
+    int found = 0;
+    char target[256];
+    
+    snprintf(target, sizeof(target), "mdp%d :", *page_index);  // corrected to insert %d properly
 
-        FILE *Bfile = fopen(PagesPasswordPath, "r");
-        if (Bfile == NULL)
+    while (fgets(line, sizeof(line), Bfile))
+    {
+        if (strncmp(line, target, strlen(target)) == 0)  // Check if the target line matches
         {
-            perror("Error opening PagesPassword.txt");
-            return;
-        }
-
-        char line[256];
-        int found = 0;
-        char target[256];
-
-        // Prepare the target identifier for the requested page
-        snprintf(target, sizeof(target), "mdp%d :", page_index + 1);
-
-        while (fgets(line, sizeof(line), Bfile))
-        {
-            if (strncmp(line, target, strlen(target)) == 0)
+            // Extract the correct password stored to verify the compatibility
+            char *stored_password = strchr(line, ':');
+            if (stored_password != NULL)
             {
-                // Extract the password stored in the file to verify compatibility
-                char *stored_password = strchr(line, ':');
-                if (stored_password != NULL)
-                {
-                    stored_password += 2; // Skip the colon and the space
-                    stored_password[strcspn(stored_password, "\n")] = '\0';
+                stored_password += 2; // Skip ": " part
+                stored_password[strcspn(stored_password, "\n")] = '\0';
 
-                    if (strcmp(stored_password, password) == 0)
-                    {
-                        found = 1;
-                        break;
-                    }
+                if (strcmp(stored_password, password) == 0)
+                {
+                    found = 1;
+                    break;
                 }
             }
         }
-        fclose(Bfile);
+    }
 
-        if (found)
+    fclose(Bfile);
+
+    if (!found)
+    {
+        printf("Error: The page %d does not exist or has no password.\n", *page_index);
+        printf("Returning to the menu.\n");
+        printf("\n");
+        menu(TempUser, &TempPage, NbPage, CDirectory, SourcePath, DestinationPath, *page_index);
+        return;
+    }
+
+    if (found)
+    {
+        printf("*Authorized access.*\n");
+        printf("Note: %s\n", TempPage[*page_index].note); 
+        return;
+    }
+    else
+    {
+        TooLate++;
+        if (TooLate < 3)
         {
-            printf("*Authorized access.*");
-            printf("Note: %s\n", TempPage[page_index].note);
-            return;
+            printf("Wrong password. You have %d attempt(s) left.\n", 3 - TooLate);
         }
         else
         {
-            TooLate++;
-            if (TooLate < 3)
-            {
-                printf("Wrong password. You have %d attempt(s) left.\n", 3 - TooLate);
-            }
-            else
-            {
-                printf("Access to this page is blocked.\n");
-                BlockedAccessPage(SourcePath, DestinationPath, TempUser, CDirectory, PageToDelete, NbPage, &TempPage);
-                printf("Returning to the menu.\n");
-                menu(TempUser, &TempPage, NbPage, CDirectory, SourcePath, DestinationPath, page_index);
-            }
+            printf("Access to this page is blocked.\n");
+            BlockedAccessPage(SourcePath, DestinationPath, TempUser, CDirectory, PageToDelete, NbPage, &TempPage);
+            printf("Returning to the menu.\n");
+            menu(TempUser, &TempPage, NbPage, CDirectory, SourcePath, DestinationPath, *page_index);
         }
     }
 }

@@ -92,7 +92,7 @@ void DeletePageProcess(Page **TempPage, int *NbPage, User *TempUser, char *CDire
         return;
     }
     PageToDelete--;
-    EnterPasswordPage(*TempPage, PageToDelete, NbPage, TempUser, CDirectory, SourcePath, DestinationPath, PageToDelete); // si le mdp est bon, on fait la suite ?
+    EnterPasswordPage(*TempPage, &PageToDelete, NbPage, TempUser, CDirectory, SourcePath, DestinationPath, &PageToDelete); // si le mdp est bon, on fait la suite ?
     printf("Are you sure you want to delete page number %d (yes/no): ", PageToDelete + 1);
     scanf("%3s", answer);
     if (strcmp(answer, "yes") == 0 || strcmp(answer, "YES") == 0)
@@ -138,22 +138,27 @@ void DeletePageProcess(Page **TempPage, int *NbPage, User *TempUser, char *CDire
 void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath)
 {
     int page_requested;
+    int *page_requested_ptr = &page_requested; // Pointer to int
+
     printf("Which page do you want to consult? (number): ");
-    scanf("%d", &page_requested);
-    if (page_requested = 0)
+    scanf("%d", page_requested_ptr); 
+
+    if (*page_requested_ptr <= 0) // verification of the value's pointer
     {
         printf("Please, enter a number greater than zero :\n");
-        scanf("%d", &page_requested);
+        scanf("%d", page_requested_ptr);
     }
-    else if (page_requested != 0)
+
+    if (*page_requested_ptr > 0)
     {
         char TempUserFoldPath[PATH_MAX];
-        snprintf(TempUserFoldPath, PATH_MAX, "%s/%s/Page%d.txt", CDirectory, TempUser->UId, page_requested);
-        printf("%s\n",TempUserFoldPath);
+        snprintf(TempUserFoldPath, PATH_MAX, "%s/%s/Page%d.txt", CDirectory, TempUser->UId, *page_requested_ptr);
+        printf("%s\n", TempUserFoldPath);
+
         FILE *file = fopen("AccountPassword.txt", "r");
         if (file)
         {
-            printf("The Page %d was open successfully : \n", page_requested);
+            //printf("AccountPassword.txt was open successfully to open the page %d : \n", *page_requested_ptr);
             fclose(file);
         }
         else
@@ -161,13 +166,16 @@ void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, 
             perror("Error opening the page");
         }
     }
-    EnterPasswordPage(*TempPage, page_requested - 1, &NbPage, TempUser, CDirectory, SourcePath, DestinationPath, PageToDelete);
+
+    EnterPasswordPage(*TempPage, page_requested_ptr, &NbPage, TempUser, CDirectory, SourcePath, DestinationPath, &PageToDelete);
+
     printf("Do you want to write in this page? (yes/no): ");
     char answer[4];
     scanf("%3s", answer);
+
     if (strcmp(answer, "yes") == 0 || strcmp(answer, "YES") == 0)
     {
-        WriteInPage(*TempPage, page_requested - 1);
+        WriteInPage(*TempPage, *page_requested_ptr - 1); 
     }
     else
     {

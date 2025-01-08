@@ -60,8 +60,8 @@ void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, 
 
 // invisible part
 void SaveToFile(User *TempUser, int *NbPage, Page *TempPage, char *CDirectory); // là c'est regroupé, peut être séparé
-int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, char *CDirectory, int PageToDelete, int *NbPage, Page **TempPage);
-void EnterPasswordPage(Page *TempPage, int page_index, int *NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath, int PageToDelete);
+int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, char *CDirectory, int *PageToDelete, int *NbPage, Page **TempPage);
+void EnterPasswordPage(Page *TempPage, int *page_index, int *NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath, int *PageToDelete);
 void WriteInPage(Page *TempPage, int page_index);
 
 #endif
