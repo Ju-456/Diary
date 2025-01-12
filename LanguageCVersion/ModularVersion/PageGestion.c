@@ -33,24 +33,23 @@ void SaveToFile(User *TempUser, int *NbPage, Page *TempPage, char *CDirectory)
     printf("The page is saved successfully.\n");
 }
 
-// to generalize
 int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, char *CDirectory, int *PageToDelete, int *NbPage, Page **TempPage)
 {
     char TempUserFoldPath[PATH_MAX];
     snprintf(SourcePath, PATH_MAX, "%s/%s/Page%d.txt", CDirectory, TempUser->UId, *NbPage);
-    printf("SourcePath : %s",SourcePath);
+    //printf("SourcePath : %s",SourcePath);
 
     FILE *Source = fopen(SourcePath, "rb");
     if (Source == NULL)
     {
-        perror("Erreur lors de l'ouverture du fichier source");
+        perror("Error opening the source file");
         return 1;
     }
     snprintf(DestinationPath, PATH_MAX, "%s/%s/BlockedPages/Page%d.txt", CDirectory, TempUser->UId, *NbPage);
     FILE *destination = fopen(DestinationPath, "wb");
     if (destination == NULL)
     {
-        perror("Erreur lors de la création du fichier destination");
+        perror("Error creating the destination file");
         fclose(Source);
         return 1;
     }
@@ -61,8 +60,9 @@ int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, c
         fwrite(buffer, 1, bytesRead, destination);
     }
     fclose(Source);
+    remove(SourcePath);
     fclose(destination);
-    printf("Fichier copié avec succès de %s vers %s\n", SourcePath, DestinationPath);
+    // printf("Fichier copié avec succès de %s vers %s\n", SourcePath, DestinationPath);
     if (BlockedAccessPage(SourcePath, DestinationPath, TempUser, CDirectory, PageToDelete, NbPage, TempPage) == 0)
     {
         for (int i = *PageToDelete; i < *NbPage - 1; i++)
@@ -90,7 +90,7 @@ int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, c
     }
     else
     {
-        printf("Error Copy\n");
+        //printf("Error Copy\n");
     }
 }
 
