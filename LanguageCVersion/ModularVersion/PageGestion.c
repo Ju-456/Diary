@@ -94,8 +94,8 @@ int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, c
 
 void EnterPasswordPage(Page *TempPage, int *page_index, int *NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath, int *PageToDelete)
 {
-    char password[11];
-    int TooLate = 0;
+    char password[11]; 
+    int AttemptsCounter = 0;   
 
     printf("Enter the password for this page (you have 3 attempts):\n");
 
@@ -110,31 +110,30 @@ void EnterPasswordPage(Page *TempPage, int *page_index, int *NbPage, User *TempU
     }
 
     char line[256];
-    int found = 0;
     char target[256];
-    
-    snprintf(target, sizeof(target), "mdp%d :", *page_index);  // corrected to insert %d properly
+    snprintf(target, sizeof(target), "mdp%d : ", *page_index); // Préparation de la chaîne cible
 
+    int found = 0;           // boolean
+    char correct_password[11]; // Extraction mdp
+
+    // Research
     while (fgets(line, sizeof(line), Bfile))
     {
-        if (strncmp(line, target, strlen(target)) == 0)  // Check if the target line matches
+        if (strncmp(line, target, strlen(target)) == 0) 
         {
-            // Extract the correct password stored to verify the compatibility
+            // Extraction of mdp after "mdpN : "
             char *stored_password = strchr(line, ':');
             if (stored_password != NULL)
             {
-                stored_password += 2; // Skip ": " part
-                stored_password[strcspn(stored_password, "\n")] = '\0';
-
-                if (strcmp(stored_password, password) == 0)
-                {
-                    found = 1;
-                    break;
-                }
+                stored_password += 2; // don't count ": "
+                stored_password[strcspn(stored_password, "\n")] = '\0'; // delete \n
+                strncpy(correct_password, stored_password, sizeof(correct_password) - 1);
+                correct_password[sizeof(correct_password) - 1] = '\0'; 
+                found = 1;
+                break;
             }
         }
     }
-
     fclose(Bfile);
 
     if (!found)
@@ -146,25 +145,34 @@ void EnterPasswordPage(Page *TempPage, int *page_index, int *NbPage, User *TempU
         return;
     }
 
-    if (found)
+    while (AttemptsCounter < 3)
     {
-        printf("*Authorized access.*\n");
-        printf("Note: %s\n", TempPage[*page_index].note); 
-        return;
-    }
-    else
-    {
-        TooLate++;
-        if (TooLate < 3)
+        printf("Enter password: ");
+        if (scanf("%10s", password) != 1)
         {
-            printf("Wrong password. You have %d attempt(s) left.\n", 3 - TooLate);
+            printf("Error reading input.\n");
+            AttemptsCounter++;
+        }
+
+        if (strcmp(password, correct_password) == 0) 
+        {
+            printf("*Authorized access.*\n\n");
+            return;
         }
         else
         {
-            printf("Access to this page is blocked.\n");
-            BlockedAccessPage(SourcePath, DestinationPath, TempUser, CDirectory, PageToDelete, NbPage, &TempPage);
-            printf("Returning to the menu.\n");
-            menu(TempUser, &TempPage, NbPage, CDirectory, SourcePath, DestinationPath, *page_index);
+            AttemptsCounter++;
+            if (AttemptsCounter < 3)
+            {
+                printf("Wrong password. You have %d attempt(s) left.\n", 3 - AttemptsCounter);
+            }
+            else
+            {
+                printf("Access to this page is blocked.\n");
+                BlockedAccessPage(SourcePath, DestinationPath, TempUser, CDirectory, PageToDelete, NbPage, &TempPage);
+                printf("Returning to the menu.\n");
+                menu(TempUser, &TempPage, NbPage, CDirectory, SourcePath, DestinationPath, *page_index);
+            }
         }
     }
 }

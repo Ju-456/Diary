@@ -141,7 +141,7 @@ void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, 
     int *page_requested_ptr = &page_requested; // Pointer to int
 
     printf("Which page do you want to consult? (number): ");
-    scanf("%d", page_requested_ptr); 
+    scanf("%d", page_requested_ptr);
 
     if (*page_requested_ptr <= 0) // verification of the value's pointer
     {
@@ -153,12 +153,12 @@ void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, 
     {
         char TempUserFoldPath[PATH_MAX];
         snprintf(TempUserFoldPath, PATH_MAX, "%s/%s/Page%d.txt", CDirectory, TempUser->UId, *page_requested_ptr);
-        printf("%s\n", TempUserFoldPath);
+        // printf("%s\n", TempUserFoldPath); good path
 
         FILE *file = fopen("AccountPassword.txt", "r");
         if (file)
         {
-            //printf("AccountPassword.txt was open successfully to open the page %d : \n", *page_requested_ptr);
+            // printf("AccountPassword.txt was open successfully to open the page %d : \n", *page_requested_ptr);
             fclose(file);
         }
         else
@@ -169,13 +169,31 @@ void ConsultPage(Page **TempPage, int PageToDelete, int NbPage, User *TempUser, 
 
     EnterPasswordPage(*TempPage, page_requested_ptr, &NbPage, TempUser, CDirectory, SourcePath, DestinationPath, &PageToDelete);
 
+    printf("This is the "); //PageN
+    char TempPageFoldPath[PATH_MAX];
+    snprintf(TempPageFoldPath, PATH_MAX, "%s/%s/Page%d.txt", CDirectory, TempUser->UId, *page_requested_ptr);
+    FILE *PageAcces = fopen(TempPageFoldPath, "r");
+    if (PageAcces == NULL)
+    {
+        perror("Error opening the file");
+        return; 
+    }
+
+    char line[256];
+    while (fgets(line, sizeof(line), PageAcces))
+    {
+        printf("%s", line); // line per line
+    }
+
+    fclose(PageAcces);
+
     printf("Do you want to write in this page? (yes/no): ");
     char answer[4];
     scanf("%3s", answer);
 
     if (strcmp(answer, "yes") == 0 || strcmp(answer, "YES") == 0)
     {
-        WriteInPage(*TempPage, *page_requested_ptr - 1); 
+        WriteInPage(*TempPage, *page_requested_ptr - 1);
     }
     else
     {
