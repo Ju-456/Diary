@@ -166,11 +166,10 @@ void EnterPasswordPage(Page *TempPage, int *page_index, int *NbPage, User *TempU
             AttemptsCounter++;
             if (AttemptsCounter < 3)
             {
-                printf("Wrong password. You have %d attempt(s) left.\n", 3 - AttemptsCounter);
+                printf("Wrong password..\n You have %d attempt(s) left.\n", 3 - AttemptsCounter);
             }
             else
             {
-                printf("%d %d ",*page_index, *NbPage);
                 *NbPage = *page_index; // bc *NbPage = 0 and *page_index = 2 and we'ld like 2
                 BlockedAccessPage(SourcePath, DestinationPath, TempUser, CDirectory, PageToDelete, NbPage, &TempPage);
                 printf("Returning to the menu.\n");
