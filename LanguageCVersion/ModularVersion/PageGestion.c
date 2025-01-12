@@ -38,6 +38,8 @@ int BlockedAccessPage(char *SourcePath, char *DestinationPath, User *TempUser, c
 {
     char TempUserFoldPath[PATH_MAX];
     snprintf(SourcePath, PATH_MAX, "%s/%s/Page%d.txt", CDirectory, TempUser->UId, *NbPage);
+    printf("SourcePath : %s",SourcePath);
+
     FILE *Source = fopen(SourcePath, "rb");
     if (Source == NULL)
     {
@@ -168,7 +170,8 @@ void EnterPasswordPage(Page *TempPage, int *page_index, int *NbPage, User *TempU
             }
             else
             {
-                printf("Access to this page is blocked.\n");
+                printf("%d %d ",*page_index, *NbPage);
+                *NbPage = *page_index; // bc *NbPage = 0 and *page_index = 2 and we'ld like 2
                 BlockedAccessPage(SourcePath, DestinationPath, TempUser, CDirectory, PageToDelete, NbPage, &TempPage);
                 printf("Returning to the menu.\n");
                 menu(TempUser, &TempPage, NbPage, CDirectory, SourcePath, DestinationPath, *page_index);
