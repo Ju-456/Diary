@@ -19,10 +19,10 @@ void CurrentDirectory(char *CDirectory, FILE *file)
 void CodeImplementation(User *TempUser, char *CDirectory, Page **TempPage, int *NbPage, int PageToDelete, FILE *file, char *SourcePath, char *DestinationPath)
 {
     WelcomeDiary();
-    printf("Do you already use this diary ? (yes/no): ");
+    printf("Do you already use this diary ? (y/n): ");
     char answer[4];
     scanf("%3s", answer);
-    if (strcmp(answer, "no") == 0 || strcmp(answer, "NO") == 0)
+    if (strcmp(answer, "n") == 0 |strcmp(answer, "no") == 0 || strcmp(answer, "NO") == 0)
     {
         FILE *file = fopen("AccountPassword.txt", "a"); // create bc doesn't exist
         printf("Go to create an account!\n");

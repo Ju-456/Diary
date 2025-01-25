@@ -2,73 +2,6 @@
 #define OPTION_C
 
 #include "Diary.h"
-/*
-void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
-{
-    char ChangeNumberPage[256];
-    char PagesPasswordPath[PATH_MAX];
-    int pageFound = 0;
-    char line[100];
-    int CurrentNumberPage;
-
-    *TempPage = realloc(*TempPage, (*NbPage + 1) * sizeof(Page));
-    if (*TempPage == NULL)
-    {
-        printf("Error allocating memory.\n");
-        exit(1);
-    }
-
-    printf("Enter the password (max 10 characters): ");
-    scanf("%10s", (*TempPage)[*NbPage].password);
-
-    snprintf(PagesPasswordPath, PATH_MAX, "%s/%s/PagesPassword.txt", CDirectory, TempUser->UId);
-    //printf("Attempting to open: %s\n", TempUser->UId); 
-
-    FILE *Bfile = fopen(PagesPasswordPath, "r");
-    if (Bfile == NULL)
-    {
-        perror("Error opening PagesPassword.txt");
-        return;
-    }
-
-    if (fgets(line, sizeof(line), Bfile) != NULL) {
-        sscanf(line, "Current Number of Page : %d", &CurrentNumberPage);
-        printf("CurrentNumberPage : %d\n", CurrentNumberPage);
-    }
-    
-    *NbPage = CurrentNumberPage;
-    printf("*NbPage : %d\n", *NbPage);
-    
-    // Create temporary file
-    FILE *tempFile = fopen("temp.txt", "w");
-    if (tempFile == NULL)
-    {
-        perror("Error creating temporary file");
-        fclose(Bfile);
-        return;
-    }
-
-    // Add the line for the new mdp
-    fprintf(tempFile, "mdp%d : %s\n", *NbPage + 1, (*TempPage)[*NbPage].password);
-
-    fclose(Bfile);
-    fclose(tempFile);
-
-    // Remplace PagesPassword.txt with the temporary file
-    remove(PagesPasswordPath);
-    rename("temp.txt", PagesPasswordPath);
-
-    printf("Write your page (max 1024 characters):\n ");
-    getchar();
-    fgets((*TempPage)[*NbPage].note, SizeMaxPage, stdin);
-
-    (*NbPage)++;
-
-    SaveToFile(TempUser, NbPage, *TempPage, CDirectory);
-
-    printf("Page n°%d created successfully.\n", *NbPage);
-}
-*/
 
 void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
 {
@@ -91,7 +24,7 @@ void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
     snprintf(tempFilePath, PATH_MAX, "%s/temp.txt", CDirectory);
 
     FILE *Bfile = fopen(PagesPasswordPath, "r");
-    FILE *tempFile = fopen(tempFilePath, "a");
+    FILE *tempFile = fopen(tempFilePath, "w");
     if (tempFile == NULL)
     {
         perror("Error creating temporary file");

@@ -15,9 +15,9 @@ void LogInUser(FILE *file, char *CDirectory, User *TempUser, Page **TempPage, in
 
     if (access(PathUser, F_OK) != 0)
     {
-        printf("This ID doesn't exist.\nDo you want to create an account? (yes/no): ");
+        printf("This ID doesn't exist.\nDo you want to create an account? (y/n): ");
         scanf("%3s", answer);
-        if (strcmp(answer, "yes") == 0 || strcmp(answer, "YES") == 0)
+        if (strcmp(answer, "y") == 0 || strcmp(answer, "yes") == 0 || strcmp(answer, "YES") == 0)
         {
             printf("Creating account...\n");
             SignInUser(TempUser, CDirectory, TempPage, NbPage, PageToDelete, file, SourcePath, DestinationPath);
