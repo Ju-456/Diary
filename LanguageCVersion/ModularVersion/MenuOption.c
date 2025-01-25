@@ -17,9 +17,6 @@ void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
         exit(1);
     }
 
-    printf("Enter the password (max 10 characters): ");
-    scanf("%10s", (*TempPage)[*NbPage].password);
-
     snprintf(PagesPasswordPath, PATH_MAX, "%s/%s/PagesPassword.txt", CDirectory, TempUser->UId);
     snprintf(tempFilePath, PATH_MAX, "%s/temp.txt", CDirectory);
 
@@ -53,10 +50,15 @@ void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
         {
             fprintf(tempFile, "%s", line); // Copy  every line of the file
         }
-        fprintf(tempFile, "mdp%d : %s\n", *NbPage, (*TempPage)[CurrentNumberPage].password);
+        
         fclose(Bfile);
     }
-    
+
+    printf("Enter the password (max 10 characters): ");
+    scanf("%10s", (*TempPage)[*NbPage].password);
+
+    fprintf(tempFile, "mdp%d : %s\n", *NbPage, (*TempPage)[*NbPage].password);
+    printf("mdp%d : %s\n", *NbPage, (*TempPage)[*NbPage].password);
     fclose(tempFile);
 
     remove(PagesPasswordPath);
