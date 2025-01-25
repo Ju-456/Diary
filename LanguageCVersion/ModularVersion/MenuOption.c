@@ -53,11 +53,10 @@ void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
         {
             fprintf(tempFile, "%s", line); // Copy  every line of the file
         }
+        fprintf(tempFile, "mdp%d : %s\n", *NbPage, (*TempPage)[CurrentNumberPage].password);
         fclose(Bfile);
     }
-
-    // Add new mdp in the temporary file
-    fprintf(tempFile, "mdp%d : %s\n", *NbPage, (*TempPage)[CurrentNumberPage].password);
+    
     fclose(tempFile);
 
     remove(PagesPasswordPath);
