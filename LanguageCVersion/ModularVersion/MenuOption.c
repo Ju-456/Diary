@@ -2,12 +2,14 @@
 #define OPTION_C
 
 #include "Diary.h"
-
+/*
 void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
 {
     char ChangeNumberPage[256];
     char PagesPasswordPath[PATH_MAX];
     int pageFound = 0;
+    char line[100];
+    int CurrentNumberPage;
 
     *TempPage = realloc(*TempPage, (*NbPage + 1) * sizeof(Page));
     if (*TempPage == NULL)
@@ -20,7 +22,7 @@ void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
     scanf("%10s", (*TempPage)[*NbPage].password);
 
     snprintf(PagesPasswordPath, PATH_MAX, "%s/%s/PagesPassword.txt", CDirectory, TempUser->UId);
-    printf("Attempting to open: %s\n", TempUser->UId); // c'est vide !!!
+    //printf("Attempting to open: %s\n", TempUser->UId); 
 
     FILE *Bfile = fopen(PagesPasswordPath, "r");
     if (Bfile == NULL)
@@ -29,6 +31,14 @@ void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
         return;
     }
 
+    if (fgets(line, sizeof(line), Bfile) != NULL) {
+        sscanf(line, "Current Number of Page : %d", &CurrentNumberPage);
+        printf("CurrentNumberPage : %d\n", CurrentNumberPage);
+    }
+    
+    *NbPage = CurrentNumberPage;
+    printf("*NbPage : %d\n", *NbPage);
+    
     // Create temporary file
     FILE *tempFile = fopen("temp.txt", "w");
     if (tempFile == NULL)
@@ -36,25 +46,6 @@ void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
         perror("Error creating temporary file");
         fclose(Bfile);
         return;
-    }
-
-    // Read PagesPassword.txt & maj "Current Number of Page"
-    while (fgets(ChangeNumberPage, sizeof(ChangeNumberPage), Bfile))
-    {
-        if (strstr(ChangeNumberPage, "Current Number of Page") != NULL)
-        {
-            fprintf(tempFile, "Current Number of Page : %d\n", *NbPage + 1);
-            pageFound = 1;
-        }
-        else
-        {
-            fputs(ChangeNumberPage, tempFile);
-        }
-    }
-
-    if (!pageFound)
-    {
-        fprintf(tempFile, "Current Number of Page : %d\n", *NbPage + 1);
     }
 
     // Add the line for the new mdp
@@ -72,6 +63,76 @@ void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
     fgets((*TempPage)[*NbPage].note, SizeMaxPage, stdin);
 
     (*NbPage)++;
+
+    SaveToFile(TempUser, NbPage, *TempPage, CDirectory);
+
+    printf("Page n°%d created successfully.\n", *NbPage);
+}
+*/
+
+void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
+{
+    char PagesPasswordPath[PATH_MAX];
+    char tempFilePath[PATH_MAX];
+    int CurrentNumberPage = 0;
+    char line[256];
+
+    *TempPage = realloc(*TempPage, (*NbPage + 1) * sizeof(Page));
+    if (*TempPage == NULL)
+    {
+        printf("Error allocating memory.\n");
+        exit(1);
+    }
+
+    printf("Enter the password (max 10 characters): ");
+    scanf("%10s", (*TempPage)[*NbPage].password);
+
+    snprintf(PagesPasswordPath, PATH_MAX, "%s/%s/PagesPassword.txt", CDirectory, TempUser->UId);
+    snprintf(tempFilePath, PATH_MAX, "%s/temp.txt", CDirectory);
+
+    FILE *Bfile = fopen(PagesPasswordPath, "r");
+    FILE *tempFile = fopen(tempFilePath, "a");
+    if (tempFile == NULL)
+    {
+        perror("Error creating temporary file");
+        if (Bfile != NULL)
+            fclose(Bfile);
+        return;
+    }
+
+    if (Bfile != NULL)
+    {
+        // read first line 
+        if (fgets(line, sizeof(line), Bfile) != NULL)
+        {
+            sscanf(line, "Current Number of Page : %d", &CurrentNumberPage);
+            //printf("CurrentNumberPage : %d\n", CurrentNumberPage);
+        }
+    }
+
+    *NbPage = CurrentNumberPage + 1;
+
+    fprintf(tempFile, "Current Number of Page : %d\n", *NbPage);
+
+    if (Bfile != NULL)
+    {
+        while (fgets(line, sizeof(line), Bfile) != NULL)
+        {
+            fprintf(tempFile, "%s", line); // Copy  every line of the file
+        }
+        fclose(Bfile);
+    }
+
+    // Add new mdp in the temporary file
+    fprintf(tempFile, "mdp%d : %s\n", *NbPage, (*TempPage)[CurrentNumberPage].password);
+    fclose(tempFile);
+
+    remove(PagesPasswordPath);
+    rename(tempFilePath, PagesPasswordPath);
+
+    printf("Write your page (max 1024 characters):\n");
+    getchar(); 
+    fgets((*TempPage)[CurrentNumberPage].note, SizeMaxPage, stdin);
 
     SaveToFile(TempUser, NbPage, *TempPage, CDirectory);
 

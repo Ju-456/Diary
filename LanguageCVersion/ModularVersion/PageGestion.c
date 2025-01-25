@@ -179,6 +179,7 @@ void EnterPasswordPage(Page *TempPage, int *page_index, int *NbPage, User *TempU
     }
 }
 
+// verif si on consulte la page est ce que modification ajoute ou supprime tt (ajout à la ligen à faire)
 void WriteInPage(Page *TempPage, int page_index)
 {
     time_t timestamp = time(NULL);
