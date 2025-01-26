@@ -58,7 +58,7 @@ void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
     scanf("%10s", (*TempPage)[*NbPage].password);
 
     fprintf(tempFile, "mdp%d : %s\n", *NbPage, (*TempPage)[*NbPage].password); 
-    printf("mdp%d : %s\n", *NbPage, (*TempPage)[*NbPage].password); // test
+    //printf("mdp%d : %s\n", *NbPage, (*TempPage)[*NbPage].password); // test
     fclose(tempFile);
 
     remove(PagesPasswordPath);
@@ -68,14 +68,16 @@ void CreatePage(User *TempUser, Page **TempPage, int *NbPage, char *CDirectory)
     while (getchar() != '\n'); // clean the buffer
     fgets((*TempPage)[*NbPage - 1].note, SizeMaxPage, stdin);
 
-    printf("Note actuelle : %s\n", (*TempPage)[*NbPage - 1].note); // test
+    //printf("Note actuelle : %s\n", (*TempPage)[*NbPage - 1].note); // test
 
     SaveToFile(TempUser, NbPage, *TempPage, CDirectory);
 
     printf("Page n°%d created successfully.\n", *NbPage);
-}// prend pas en compte les espaces dans un mdp je crois mais prend les chiffres 
+}
+// prend pas en compte les espaces dans un mdp mais prend les chiffres 
 // tous les caractères spéciaux sont pris en compte dans le contenu de la page, il faut rajouter le saut de ligne et modifier l'édition
-// quand on se deconnecte et qu'on recree une page, les caractères sont mal retranscris SUR la page alors que le fget contient bien le message !!!
+// réecrire dans une page ne fonctionne même pas mdr
+
 void DeletePageProcess(Page **TempPage, int *NbPage, User *TempUser, char *CDirectory, char *SourcePath, char *DestinationPath)
 {
     int PageToDelete;
